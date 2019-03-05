@@ -29,16 +29,23 @@ class GUI:
 		textPrint.print(screen, "Left Lane Time: {}".format(leftDisplayTime))
 		textPrint.print(screen, "Right Lane Time: {}".format(rightDisplayTime))
 
-	def GUI4(screen, colour, leftDisplayTime, rightDisplayTime, cooldown, in_cooldown, postout):
+	def GUI4(screen, colour, leftDisplayTime, rightDisplayTime, cooldown, in_cooldown, postout, framerate):
 		textPrint.reset()
 		screen.fill(colour)
 		textPrint.print(screen, "Left Lane Time: {}".format(leftDisplayTime))
 		textPrint.print(screen, "Right Lane Time: {}".format(rightDisplayTime))
-		if cooldown == in_cooldown:
+		if cooldown == in_cooldown * framerate + framerate:
 			textPrint.print(screen, "Cooldown: Please release the Spacebar")
-		if cooldown > 0 and cooldown != in_cooldown:
+		if cooldown > 0 and cooldown != (in_cooldown * framerate + framerate):
 			textPrint.print(screen, "Cooldown: {} Seconds".format(postout))
 		if cooldown == 0:
+			textPrint.print(screen, "")
+			textPrint.print(screen, "")
+			textPrint.print(screen, "")
+			textPrint.print(screen, "")
+			textPrint.print(screen, "")
+			textPrint.print(screen, "")
+			textPrint.print(screen, "")
 			textPrint.print(screen, "Waiting for Spacebar...")
 
 	def changeFont():

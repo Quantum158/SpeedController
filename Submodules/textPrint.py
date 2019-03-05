@@ -21,5 +21,3 @@ class TextPrint():
 		self.x = 10
 		self.y = 10
 		self.line_height = 60
-
-

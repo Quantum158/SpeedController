@@ -146,6 +146,7 @@ while not done:
 		pygame.mixer.init()
 		LowTone = pygame.mixer.Sound(os.path.join(__location__, '.\Resources\Sounds\LowTone.ogg'))
 		HighTone = pygame.mixer.Sound(os.path.join(__location__, '.\Resources\Sounds\HighTone.ogg'))
+		FalseStart = pygame.mixer.Sound(os.path.join(__location__, '.\Resources\Sounds\FalseStart.ogg'))
 		pygame.mixer.init()	
 		
 		#Font Shrink
@@ -158,17 +159,17 @@ while not done:
 		#End Font Shrink
 
 		if timeKeeper.timeCheck(globals.timePoint, 1.00, time.time()) == True and playState == 0:
-			#LowTone.play()
+			LowTone.play()
 			playState = 1 
 			print("Tone 1")
 			
 		if timeKeeper.timeCheck(globals.timePoint, 2.00, time.time()) == True and playState == 1:
-			#LowTone.play()
+			LowTone.play()
 			playState = 2 
 			print("Tone 2")
 		
 		if timeKeeper.timeCheck(globals.timePoint, 3.00, time.time()) == True and playState == 2:
-			#HighTone.play()
+			HighTone.play()
 			playState = 3
 			print("Tone 3")
 			played = True
@@ -177,11 +178,11 @@ while not done:
 			controlState = 3
 			globals.timePoint = 0
 			fontChange = 0
+			lFalse = False
+			rFalse = False
 						
 	#Timer Running / Waiting For Time Stop
 	if controlState == 3:
-		if pygame.mixer.get_init == 1:
-			pygame.mixer.quit()
 
 		if globals.timePoint == 0:
 			globals.timePoint = time.time()
@@ -195,22 +196,47 @@ while not done:
 		GUI.changeFont()
 		#End Font Size Reset
 		
+		#Manual False Indicator
+		if buttonChecks.getLeftShiftPressed() == True and lStop == False:
+			lStop = True
+			lFalse = True
+			FalseStart.play()
+		
+		if buttonChecks.getRightShiftPressed() == True and rStop == False:
+			rStop = True
+			rFalse = True
+			FalseStart.play()
+		#END Manual False Indicator
+
+		#Time Updater
 		if lStop == False:
 			globals.lTime = timeKeeper.timeDif(globals.timePoint, time.time())
 		if rStop == False:
 			globals.rTime = timeKeeper.timeDif(globals.timePoint, time.time())
+		#END Time Updater
+
+		#Regular Stop Time
 		if lStop == False:
-			if buttonChecks.getLeftPressed() == True:
+			if buttonChecks.getLeftPressed() == True and lFalse == False:
 				lStop = True
-		
 		if rStop == False:
-			if buttonChecks.getRightPressed() == True:
+			if buttonChecks.getRightPressed() == True and rFalse == False:
 				rStop = True
-		
+		#END Regular Stop Time
+
+		#Moving On
 		if lStop == True and rStop == True and fontChange == framerate:
 			controlState = 4
-		leftDisplayTime = str(float(globals.lTime))
-		rightDisplayTime = str(float(globals.rTime))
+		
+		#Text Out
+		if lFalse == False:
+			leftDisplayTime = str(float(globals.lTime))
+		else:
+			leftDisplayTime = "False Start"
+		if rFalse == False:
+			rightDisplayTime = str(float(globals.rTime))
+		else:
+			rightDisplayTime = "False Start"
 
 	#Both Timers Stopped / Waiting For Reset
 	if controlState == 4:
@@ -219,7 +245,7 @@ while not done:
 				cooldown -= 1
 				postout = str(int(cooldown / framerate))
 		else:
-			postout = "Spacebar Pressed!"
+			postout = "Release Spacebar!"
 			
 
 		#Reset
@@ -256,7 +282,7 @@ while not done:
 		GUI.GUI3(screen, ENDCOLOUR, leftDisplayTime, rightDisplayTime)
 
 	if controlState == 4:
-		GUI.GUI4(screen, ENDCOLOUR, leftDisplayTime, rightDisplayTime, cooldown, in_cooldown, postout)
+		GUI.GUI4(screen, ENDCOLOUR, leftDisplayTime, rightDisplayTime, cooldown, in_cooldown, postout, framerate)
 
 	pygame.display.flip()
 

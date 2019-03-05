@@ -18,15 +18,45 @@ class buttonChecks:
 			return False
 
 	def getLeftPressed():
-		"""Function that returns a Boolean regarding if the left arrow key is pressed"""
-		if pygame.key.get_pressed()[K_LEFT] == True:
+		"""Function that returns a Boolean regarding if the left arrow key is pressed (and not left shift)"""
+		leftShift = False
+		mods = pygame.key.get_mods()
+		if mods & KMOD_LSHIFT:
+			leftShift = True
+		if pygame.key.get_pressed()[K_LEFT] == True and leftShift == False:
 			return True
 		else: 
 			return False
 
 	def getRightPressed():
-		"""Function that returns a Boolean regarding if the right arrow key is pressed"""
-		if pygame.key.get_pressed()[K_RIGHT] == True:
+		"""Function that returns a Boolean regarding if the right arrow key is pressed (and not left shift)"""
+		leftShift = False
+		mods = pygame.key.get_mods()
+		if mods & KMOD_LSHIFT:
+			leftShift = True
+		if pygame.key.get_pressed()[K_RIGHT] == True and leftShift == False:
+			return True
+		else: 
+			return False
+
+	def getLeftShiftPressed():
+		"""Function that returns a Boolean regarding if the left arrow key and left shift are pressed at the same time"""
+		leftShift = False
+		mods = pygame.key.get_mods()
+		if mods & KMOD_LSHIFT:
+			leftShift = True
+		if pygame.key.get_pressed()[K_LEFT] == True and leftShift == True:
+			return True
+		else: 
+			return False
+
+	def getRightShiftPressed():
+		"""Function that returns a Boolean regarding if the right arrow key and left shift are pressed at the same time"""
+		leftShift = False
+		mods = pygame.key.get_mods()
+		if mods & KMOD_LSHIFT:
+			leftShift = True
+		if pygame.key.get_pressed()[K_RIGHT] == True and leftShift == True:
 			return True
 		else: 
 			return False
