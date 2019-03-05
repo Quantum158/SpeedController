@@ -1,7 +1,6 @@
 import pygame
 import globals
 globals.initialize()
-print(globals.fontSize)
 DISPLAY = (0,0,0)
 class TextPrint():
 	"""Very Basic GUI render stuff"""

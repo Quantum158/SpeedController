@@ -1,8 +1,4 @@
-#TESTING GIT
-
-
-#														#
-#-------------------Speed Timer  V1.0-------------------#
+#-----------Speed Timer - NO CONTROLLER V1.5------------#
 #-------------Written By Benjamin MacDonald-------------#
 #														#
 #-------------------------Usage-------------------------#
@@ -24,7 +20,7 @@ in_delayCheck = 2  #How long the system waits in seconds before starting countdo
 in_cooldown = 3    #Time Lock in seconds after pedal is released
 
 #-------------------------------------------------------#
-#Global Variables
+#Control Variables
 controlState = 0
 framerate = 60
 counter = 0
@@ -50,14 +46,16 @@ delayCheck = in_delayCheck * framerate
 import pygame
 pygame.init()
 import time
+import datetime
 from time import sleep
 sleep(1)
-import sys, os, datetime
+import sys, os
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 from Submodules.controlChecks import *
 from Submodules.textPrint import TextPrint
 from Submodules.GUI import *
+from Submodules.timeKeeper import *
 import globals
 
 #Load Icon
@@ -83,7 +81,7 @@ clock = pygame.time.Clock()
 
 print("""
 														
------------Speed Timer - NO CONTROLLER V1.0------------
+-----------Speed Timer - NO CONTROLLER V1.5------------
 -------------Written By Benjamin MacDonald-------------
 															  
 -------------------------Usage-------------------------
@@ -136,79 +134,93 @@ while not done:
 			fontSize = 60
 			fontChange = 0
 			controlState = 2
+			playState = 0
 	
 	#Staged
-	if controlState == 2 and buttonChecks.waitForSpace(False) == True:   #Locked in
+	if controlState == 2 and buttonChecks.waitForSpace(False) == True:
+		if globals.timePoint == 0:
+			globals.timePoint = time.time()
+			#print(globals.timePoint)
+
 		#AUDIO LOAD
 		pygame.mixer.init()
 		LowTone = pygame.mixer.Sound(os.path.join(__location__, '.\Resources\Sounds\LowTone.ogg'))
 		HighTone = pygame.mixer.Sound(os.path.join(__location__, '.\Resources\Sounds\HighTone.ogg'))
 		pygame.mixer.init()	
 		
-
-
-		if counter < ((framerate * 3) + (framerate / 2)):
-			counter += 1
-		
 		#Font Shrink
-		if counter >= (framerate / 2) and counter <= (framerate):
-			globals.fontSize = 60 - (int(59/(int(framerate/2))*counter) - int(framerate/2))
+		if fontChange < framerate:
+			fontChange += 1
+		if fontChange >= (framerate / 2) and fontChange <= (framerate):
+			globals.fontSize = 60 - (int(59/(int(framerate/2))*fontChange) - int(framerate/2))
+
 		GUI.changeFont()
 		#End Font Shrink
 
-		if counter == framerate:
+		if timeKeeper.timeCheck(globals.timePoint, 1.00, time.time()) == True and playState == 0:
 			#LowTone.play()
+			playState = 1 
 			print("Tone 1")
 			
-		if counter == (framerate * 2):
+		if timeKeeper.timeCheck(globals.timePoint, 2.00, time.time()) == True and playState == 1:
 			#LowTone.play()
+			playState = 2 
 			print("Tone 2")
 		
-		if counter == (framerate * 3) and played == False:
+		if timeKeeper.timeCheck(globals.timePoint, 3.00, time.time()) == True and playState == 2:
 			#HighTone.play()
+			playState = 3
 			print("Tone 3")
 			played = True
 			
 		if played == True and pygame.mixer.get_busy() != 1:
 			controlState = 3
-			counter = 0
+			globals.timePoint = 0
 			fontChange = 0
 						
 	#Timer Running / Waiting For Time Stop
 	if controlState == 3:
 		if pygame.mixer.get_init == 1:
 			pygame.mixer.quit()
+
+		if globals.timePoint == 0:
+			globals.timePoint = time.time()
+			#print(globals.timePoint)
+
 		#Font Size Reset
 		if fontChange != framerate:
 			fontChange += 1
-			print(fontChange)
 		if fontChange >= (framerate/2) and fontChange <= framerate and globals.fontSize != 60:
 			globals.fontSize = 1 + (int(50/(int(framerate/2))*fontChange)- int(framerate/2))
-			print(globals.fontSize)
 		GUI.changeFont()
 		#End Font Size Reset
 		
 		if lStop == False:
-			lTime += 1
+			globals.lTime = timeKeeper.timeDif(globals.timePoint, time.time())
 		if rStop == False:
-			rTime += 1
+			globals.rTime = timeKeeper.timeDif(globals.timePoint, time.time())
 		if lStop == False:
 			if buttonChecks.getLeftPressed() == True:
 				lStop = True
+		
 		if rStop == False:
 			if buttonChecks.getRightPressed() == True:
 				rStop = True
+		
 		if lStop == True and rStop == True and fontChange == framerate:
 			controlState = 4
-		leftDisplayTime = str(float("{0:.2f}".format(lTime / framerate)))
-		rightDisplayTime = str(float("{0:.2f}".format(rTime / framerate)))
+		leftDisplayTime = str(float(globals.lTime))
+		rightDisplayTime = str(float(globals.rTime))
 
 	#Both Timers Stopped / Waiting For Reset
 	if controlState == 4:
 		if buttonChecks.waitForSpace(False) == True:
 			if cooldown > 0:
 				cooldown -= 1
-			postout = str(int(cooldown / framerate))
+				postout = str(int(cooldown / framerate))
+		else:
+			postout = "Spacebar Pressed!"
+			
 
 		#Reset
 		if cooldown == 0:
@@ -228,6 +240,7 @@ while not done:
 				textPrint.changeFont()
 				controlState = 1
 				print("Reset")
+				globals.timePoint = 0
 		
 	#GUI
 	if controlState == 0:
