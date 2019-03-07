@@ -16,9 +16,13 @@
 
 #------------------Variable Assignment------------------#
 
-in_delayCheck = 2  #How long the system waits in seconds before starting countdown
-in_cooldown = 3    #Time Lock in seconds after pedal is released
-
+in_delayCheck = 2		    #How long the system waits in seconds before starting countdown
+in_cooldown = 3			    #Time Lock in seconds after pedal is released
+delayAfterStage = input("Delay After Staging? ")  #Should the system wait after the a start is staged (useful for when you need to start the countdown and then get on the wall)
+if delayAfterStage == "yes" or delayAfterStage == "y" or "delayAfterStage" == true:
+	delayAfterStage == True
+else:
+	delayAfterStage == False
 #-------------------------------------------------------#
 #Control Variables
 controlState = 0
@@ -27,6 +31,7 @@ counter = 0
 fontChange = 0
 postcount = 0
 done = False
+stage2 = False
 
 #Per Lane Variables
 lTime = 0
@@ -130,14 +135,25 @@ while not done:
 		
 		if counter == delayCheck:
 			print("Delay Satisfied!")
+			if delayAfterStage == True:
+				globals.timePoint = time.time()
+				print("Setting Stage Delay")
+			else:
+				stage2 = True
 			counter = 0
 			fontSize = 60
 			fontChange = 0
-			controlState = 2
 			playState = 0
+			controlState = 2
 	
 	#Staged
-	if controlState == 2 and buttonChecks.waitForSpace(False) == True:
+	if controlState == 2 and delayAfterStage == True:
+		if timeKeeper.timeCheck(globals.timePoint, 10, time.time()):
+			stage2 = True
+			globals.timePoint = 0
+			print("Delay after Stage Satisfied! Starting Countdown")
+
+	if controlState == 2 and buttonChecks.waitForSpace(False) == True and stage2 == True:
 		if globals.timePoint == 0:
 			globals.timePoint = time.time()
 			#print(globals.timePoint)
@@ -265,8 +281,9 @@ while not done:
 				fontSize = 60
 				textPrint.changeFont()
 				controlState = 1
-				print("Reset")
+				stage2 = False
 				globals.timePoint = 0
+				print("Reset")
 		
 	#GUI
 	if controlState == 0:
