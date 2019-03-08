@@ -17,12 +17,13 @@
 #------------------Variable Assignment------------------#
 
 in_delayCheck = 2		    #How long the system waits in seconds before starting countdown
-in_cooldown = 3			    #Time Lock in seconds after pedal is released
+in_cooldown = 2			    #Time Lock in seconds after pedal is released
 delayAfterStage = input("Delay After Staging? ")  #Should the system wait after the a start is staged (useful for when you need to start the countdown and then get on the wall)
-if delayAfterStage == "yes" or delayAfterStage == "y" or "delayAfterStage" == true:
-	delayAfterStage == True
+
+if delayAfterStage == "yes" or delayAfterStage == "y" or delayAfterStage == "true":
+	delayAfterStage = True
 else:
-	delayAfterStage == False
+	delayAfterStage = False
 #-------------------------------------------------------#
 #Control Variables
 controlState = 0
@@ -62,6 +63,21 @@ from Submodules.textPrint import TextPrint
 from Submodules.GUI import *
 from Submodules.timeKeeper import *
 import globals
+
+globals.lUse = input("Use Left Timer? ") #Should the left timer be displayed?
+globals.rUse = input("Use Right Timer? ") # Should the right timer be displayed?
+if globals.lUse == "yes" or globals.lUse == "y" or globals.lUse == "true":
+	globals.lUse = True
+else:
+	globals.lUse = False
+
+if globals.rUse == "yes" or globals.rUse == "y" or globals.rUse == "true":
+	globals.rUse = True
+else:
+	globals.rUse = False
+print(globals.lUse)
+print(globals.rUse)
+
 
 #Load Icon
 icon = pygame.image.load(os.path.join(__location__, '.\Resources\Icon.jpg'))

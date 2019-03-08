@@ -14,3 +14,8 @@ def initialize():
 	lTime = 0
 	global rTime
 	rTime = 0
+
+	global lUse
+	lUse = 0
+	global rUse
+	rUse = 0
