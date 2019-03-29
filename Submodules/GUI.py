@@ -50,7 +50,7 @@ class GUI:
 		if cooldown == in_cooldown * framerate + framerate:
 			textPrint.print(screen, "Cooldown: Please release the Spacebar")
 		if cooldown > 0 and cooldown != (in_cooldown * framerate + framerate):
-			textPrint.print(screen, "Cooldown: {} Seconds".format(postout))
+			textPrint.print(screen, "Cooldown: {} Seconds".format(postout)) #I need to fix this eventually
 		if cooldown == 0:
 			textPrint.print(screen, "")
 			textPrint.print(screen, "")
