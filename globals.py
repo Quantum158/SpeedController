@@ -19,3 +19,6 @@ def initialize():
 	lUse = 0
 	global rUse
 	rUse = 0
+
+	global waitAferStage
+	waitAfterStage = 10

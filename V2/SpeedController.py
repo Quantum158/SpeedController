@@ -3,11 +3,25 @@ import time
 from time import sleep
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 
 _translate = QtCore.QCoreApplication.translate
+
+class Thread1(QtCore.QThread):
+	def __init__(self, parent=None):
+		QtCore.QThread.__init__(self, parent)
+	def run(self):
+		self.running = True
+		self.count = 0
+		while self.running:
+			print(self.count)
+			self.count += 1
+			time.sleep(1)
+
 class Ui_MainWindow(object):
 	def setupUi(self, MainWindow):
+		self.controlEnabled = True
+
 		MainWindow.setObjectName("MainWindow")
 		MainWindow.resize(800, 600)
 		MainWindow.setMinimumSize(QtCore.QSize(800, 600))
@@ -28,7 +42,8 @@ class Ui_MainWindow(object):
 
 		#Timer A Label
 		self.widget = QtWidgets.QWidget(self.horizontalLayoutWidget)
-		self.widget.setStyleSheet("background-color: rgb(0, 0, 255);")
+#		self.widget.setStyleSheet("background-color: rgb(0, 0, 255);")
+		self.widget.setStyleSheet("background-color: rgb(0, 0, 0);")
 		self.widget.setObjectName("widget")
 		self.TimerALabel = QtWidgets.QLabel(self.widget)
 		self.TimerALabel.setGeometry(QtCore.QRect(0, 0, 261, 51))
@@ -149,7 +164,8 @@ class Ui_MainWindow(object):
 
 		#Timer B Label
 		self.widget_2 = QtWidgets.QWidget(self.horizontalLayoutWidget)
-		self.widget_2.setStyleSheet("background-color: rgb(255, 255, 0);")
+#		self.widget_2.setStyleSheet("background-color: rgb(0, 0, 255);")
+		self.widget_2.setStyleSheet("background-color: rgb(0, 0, 0);")
 		self.widget_2.setObjectName("widget_2")
 		self.TimerBLabel = QtWidgets.QLabel(self.widget_2)
 		self.TimerBLabel.setGeometry(QtCore.QRect(0, 0, 261, 51))
@@ -171,7 +187,7 @@ class Ui_MainWindow(object):
 		self.setWindowInfo(MainWindow)
 		QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-		self.pushController.clicked.connect(self.PrintMessage)
+		self.pushController.clicked.connect(self.onStart)
 
 	def retranslateUi(self, MainWindow):
 		self.TimerALabel.setText(_translate("MainWindow", "Timer A"))
@@ -192,13 +208,26 @@ class Ui_MainWindow(object):
 		self.TimerBTime.setText(_translate("MainWindow", "0:00.00"))
 
 	def setWindowInfo(self, MainWindow):
-		MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+		MainWindow.setWindowTitle(_translate("MainWindow", "Speed Controller"))
 		MainWindow.setWindowIcon(QtGui.QIcon(__location__ + os.path.sep + "Resources" + os.path.sep + "Icon.jpg"))
 
-	def PrintMessage(self):
-		print("Functioning")
-		self.textStatus.setText(_translate("MainWindow", "Functioning"))
+	def onStart(self):
+		if self.controlEnabled == True:
+			self.controlEnabled = False
+			self.pushController.setText(_translate("MainWindow", "Stop"))
+			print("Running")
+			self.thread1 = Thread1()
+			self.thread1.start()
 
+
+
+		if self.controlEnabled == False:
+			print("Attempting to Stop")
+			Thread1.running = False
+			self.pushController.setText(_translate("MainWindow", "Start"))
+
+
+			
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 	MainWindow = QtWidgets.QMainWindow()
@@ -206,4 +235,3 @@ if __name__ == "__main__":
 	ui.setupUi(MainWindow)
 	MainWindow.show()
 	sys.exit(app.exec_())
-
