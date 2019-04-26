@@ -10,25 +10,29 @@ print(globals.thread1running)
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-
+from PyQt5.QtCore import pyqtSignal
 _translate = QtCore.QCoreApplication.translate
 
 class Thread1(QtCore.QThread):
+	sig1 = pyqtSignal(str)
 	def __init__(self, parent=None):
 		QtCore.QThread.__init__(self, parent)
+	
 	def run(self):
 		globals.thread1running = True
-		print(globals.thread1running)
+		
 		self.count = 0
 		while globals.thread1running == True:
 			print(self.count)
 			self.count += 1
 			time.sleep(1)
+			self.sig1.emit(str(self.count))
 
 class Ui_MainWindow(object):
 	def setupUi(self, MainWindow):
 		globals.controlEnabled = True
 
+		sig = pyqtSignal(str)
 		MainWindow.setObjectName("MainWindow")
 		MainWindow.resize(800, 600)
 		MainWindow.setMinimumSize(QtCore.QSize(800, 600))
@@ -49,8 +53,8 @@ class Ui_MainWindow(object):
 
 		#Timer A Label
 		self.widget = QtWidgets.QWidget(self.horizontalLayoutWidget)
-#		self.widget.setStyleSheet("background-color: rgb(0, 0, 255);")
-		self.widget.setStyleSheet("background-color: rgb(0, 0, 0);")
+		self.widget.setStyleSheet("background-color: rgb(0, 0, 255);")
+#		self.widget.setStyleSheet("background-color: rgb(0, 0, 0);")
 		self.widget.setObjectName("widget")
 		self.TimerALabel = QtWidgets.QLabel(self.widget)
 		self.TimerALabel.setGeometry(QtCore.QRect(0, 0, 261, 51))
@@ -224,8 +228,8 @@ class Ui_MainWindow(object):
 			self.pushController.setText(_translate("MainWindow", "Stop"))
 			print("Running")
 			self.thread1 = Thread1()
+			self.thread1.sig1.connect(self.response)
 			return self.thread1.start()
-
 
 
 		if globals.controlEnabled == False:
@@ -234,7 +238,9 @@ class Ui_MainWindow(object):
 			time.sleep(1)
 			globals.controlEnabled = True
 			return self.pushController.setText(_translate("MainWindow", "Start"))
-
+	
+	def response(self, info):
+		self.TimerATime.setText(_translate("MainWindow", info))
 			
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
