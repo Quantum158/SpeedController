@@ -9,4 +9,5 @@ Once I am satisfied with the state of the project, I will do an official release
 # My Resources (to be removed when development is completed)
 
 https://www.zeolearn.com/magazine/getting-started-guis-with-python-pyqt-qthread-class
+
 https://docs.python.org/3/library/configparser.html
