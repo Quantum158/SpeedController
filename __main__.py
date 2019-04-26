@@ -20,6 +20,7 @@ in_delayCheck = 2		    #How long the system waits in seconds before starting cou
 in_cooldown = 2			    #Time Lock in seconds after pedal is released
 delayAfterStage = input("Delay After Staging? ")  #Should the system wait after the a start is staged (useful for when you need to start the countdown and then get on the wall)
 
+
 if delayAfterStage == "yes" or delayAfterStage == "y" or delayAfterStage == "true":
 	delayAfterStage = True
 else:
@@ -91,6 +92,7 @@ BACKGROUNDDefault = (255,255,255)
 ENDCOLOUR = (16, 220, 2)
 
 size = [800,600]
+#size = [1600,600]
 screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption("Start System")
