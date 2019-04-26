@@ -1,6 +1,12 @@
 import sys, os
 import time
 from time import sleep
+import globals
+import configparser
+config = configparser.ConfigParser()
+
+time.sleep(1)
+print(globals.thread1running)
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
@@ -11,16 +17,17 @@ class Thread1(QtCore.QThread):
 	def __init__(self, parent=None):
 		QtCore.QThread.__init__(self, parent)
 	def run(self):
-		self.running = True
+		globals.thread1running = True
+		print(globals.thread1running)
 		self.count = 0
-		while self.running:
+		while globals.thread1running == True:
 			print(self.count)
 			self.count += 1
 			time.sleep(1)
 
 class Ui_MainWindow(object):
 	def setupUi(self, MainWindow):
-		self.controlEnabled = True
+		globals.controlEnabled = True
 
 		MainWindow.setObjectName("MainWindow")
 		MainWindow.resize(800, 600)
@@ -212,20 +219,21 @@ class Ui_MainWindow(object):
 		MainWindow.setWindowIcon(QtGui.QIcon(__location__ + os.path.sep + "Resources" + os.path.sep + "Icon.jpg"))
 
 	def onStart(self):
-		if self.controlEnabled == True:
-			self.controlEnabled = False
+		if globals.controlEnabled == True:
+			globals.controlEnabled = False
 			self.pushController.setText(_translate("MainWindow", "Stop"))
 			print("Running")
 			self.thread1 = Thread1()
-			self.thread1.start()
+			return self.thread1.start()
 
 
 
-		if self.controlEnabled == False:
+		if globals.controlEnabled == False:
 			print("Attempting to Stop")
-			Thread1.running = False
-			self.pushController.setText(_translate("MainWindow", "Start"))
-
+			globals.thread1running = False
+			time.sleep(1)
+			globals.controlEnabled = True
+			return self.pushController.setText(_translate("MainWindow", "Start"))
 
 			
 if __name__ == "__main__":
