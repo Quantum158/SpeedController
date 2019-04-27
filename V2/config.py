@@ -1,3 +1,6 @@
+#THIS FILE IS CHANGED IN MEMORY, THESE ARE THE DEFAULT VALUES (THE ONES FOR BOOT UP)
+
+
 #TIMERS
 enabledTimers = dict(
 	TimerA = False,
@@ -7,9 +10,9 @@ enabledTimers = dict(
 
 #QUALITY OF LIFE
 delays = dict(
-	Delay_After_Staging = 0,
+	Delay_After_Staging = 0, #In Seconds
 
-	Start_Check_Delay = 2,
+	Start_Check_Delay = 2, #In Seconds
 
-	Post_Sequence_Cooldown = 3
+	Post_Sequence_Cooldown = 3 #In Seconds
 	)

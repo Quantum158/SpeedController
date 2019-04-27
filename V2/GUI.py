@@ -2,37 +2,14 @@ import sys, os
 import time
 from time import sleep
 import globals
+import run
 import configLoader
-configLoader.init()
-
-time.sleep(1)
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtCore import pyqtSignal
 _translate = QtCore.QCoreApplication.translate
-
-class Thread1(QtCore.QThread):
-	sig1 = pyqtSignal(str)
-	def __init__(self, parent=None):
-		QtCore.QThread.__init__(self, parent)
-	
-	def run(self):
-		globals.thread1running = True
-		
-		self.count = 0
-		while globals.thread1running == True:
-			print(self.count)
-			self.count += 1
-			time.sleep(1)
-			self.sig1.emit(str(self.count))
-
-			print(configLoader.TimeAEnabled)
-			print(configLoader.TimeBEnabled)
-			print(configLoader.delayStage)
-			print(configLoader.startCheck)
-			print(configLoader.postCooldown)
 
 class Ui_MainWindow(object):
 	def setupUi(self, MainWindow):
@@ -163,13 +140,13 @@ class Ui_MainWindow(object):
 		self.textStageDelay.textChanged.connect(self.StageDelaySetting)
 
 		#Check Delay
-		self.checkDelayLabel = QtWidgets.QLabel(self.formLayoutWidget_2)
-		self.checkDelayLabel.setObjectName("checkDelayLabel")
-		self.formLayout_2.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.checkDelayLabel)
-		self.textCheckDelay = QtWidgets.QLineEdit(self.formLayoutWidget_2)
-		self.textCheckDelay.setObjectName("textCheckDelay")
-		self.formLayout_2.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.textCheckDelay)
-		self.textCheckDelay.textChanged.connect(self.CheckDelaySetting)
+		#self.checkDelayLabel = QtWidgets.QLabel(self.formLayoutWidget_2)
+		#self.checkDelayLabel.setObjectName("checkDelayLabel")
+		#self.formLayout_2.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.checkDelayLabel)
+		#self.textCheckDelay = QtWidgets.QLineEdit(self.formLayoutWidget_2)
+		#self.textCheckDelay.setObjectName("textCheckDelay")
+		#self.formLayout_2.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.textCheckDelay)
+		#self.textCheckDelay.textChanged.connect(self.CheckDelaySetting)
 
 		#Cooldown
 		self.cooldownDelayLabel = QtWidgets.QLabel(self.formLayoutWidget_2)
@@ -220,14 +197,18 @@ class Ui_MainWindow(object):
 		self.checkATimerEnable.setText(_translate("MainWindow", "Timer A Enabled"))
 		self.checkBTimerEnable.setText(_translate("MainWindow", "Timer B Enabled"))
 		self.delayAfterStagingLabel.setText(_translate("MainWindow", "Delay After Staging"))
-		self.textStageDelay.setText(_translate("MainWindow", "0"))
-		self.checkDelayLabel.setText(_translate("MainWindow", "Start Check Delay"))
-		self.textCheckDelay.setText(_translate("MainWindow", "2"))
+		self.textStageDelay.setText(_translate("MainWindow", str(configLoader.delayStage)))
+	#	self.checkDelayLabel.setText(_translate("MainWindow", "Start Check Delay"))
+	#	self.textCheckDelay.setText(_translate("MainWindow", str(configLoader.startCheck)))
 		self.cooldownDelayLabel.setText(_translate("MainWindow", "Cooldown Delay"))
-		self.textCooldown.setText(_translate("MainWindow", "3"))
+		self.textCooldown.setText(_translate("MainWindow", str(configLoader.postCooldown)))
 		self.TimerBLabel.setText(_translate("MainWindow", "Timer B"))
 		self.TimerBTime.setText(_translate("MainWindow", "0:00.00"))
 
+	def setWindowInfo(self, MainWindow):
+		MainWindow.setWindowTitle(_translate("MainWindow", "Speed Controller"))
+		MainWindow.setWindowIcon(QtGui.QIcon(__location__ + os.path.sep + "Resources" + os.path.sep + "Icon.jpg"))
+	
 	#---
 	def TimerASetting(self):
 		if self.checkATimerEnable.isChecked():
@@ -258,34 +239,40 @@ class Ui_MainWindow(object):
 		configLoader.postCooldown = text
 	#---
 
-	def setWindowInfo(self, MainWindow):
-		MainWindow.setWindowTitle(_translate("MainWindow", "Speed Controller"))
-		MainWindow.setWindowIcon(QtGui.QIcon(__location__ + os.path.sep + "Resources" + os.path.sep + "Icon.jpg"))
-
 	def onStart(self):
 		if globals.controlEnabled == True:
 			globals.controlEnabled = False
+			self.textStatus.setText(_translate("MainWindow", "Initializing..."))
 			self.pushController.setText(_translate("MainWindow", "Abort"))
 			print("Running")
-			self.thread1 = Thread1()
-			self.thread1.sig1.connect(self.response)
-			return self.thread1.start()
+			self.run = run.Run()
+			self.run.aTime.connect(self.aTimeUpdate)
+			self.run.aColour.connect(self.aColourUpdate)
+			self.run.bTime.connect(self.bTimeUpdate)
+			self.run.bColour.connect(self.bColourUpdate)
+			self.run.textStatus.connect(self.textStatusUpdate)
+			return self.run.start()
 
 
 		if globals.controlEnabled == False:
 			print("Attempting to Stop")
-			globals.thread1running = False
+			globals.runthreadrunning = False
+			globals.controlState = -1
 			time.sleep(1)
 			globals.controlEnabled = True
 			return self.pushController.setText(_translate("MainWindow", "Start"))
 	
-	def response(self, info):
-		self.TimerATime.setText(_translate("MainWindow", info))
-			
-if __name__ == "__main__":
-	app = QtWidgets.QApplication(sys.argv)
-	MainWindow = QtWidgets.QMainWindow()
-	ui = Ui_MainWindow()
-	ui.setupUi(MainWindow)
-	MainWindow.show()
-	sys.exit(app.exec_())
+	def aTimeUpdate(self, text):
+		self.TimerATime.setText(_translate("MainWindow", text))
+
+	def aColourUpdate(self, colour):
+		self.widget.setStyleSheet("background-color: rgb" + colour +";")
+
+	def bTimeUpdate(self, text):
+		self.TimerBTime.setText(_translate("MainWindow", text))
+
+	def bColourUpdate(self, colour):
+		self.widget_2.setStyleSheet("background-color: rgb" + colour +";")
+
+	def textStatusUpdate(self, text):
+		self.textStatus.setText(_translate("MainWindow", text))
