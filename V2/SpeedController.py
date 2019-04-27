@@ -2,11 +2,11 @@ import sys, os
 import time
 from time import sleep
 import globals
-import configparser
-config = configparser.ConfigParser()
+import configLoader
+configLoader.init()
 
 time.sleep(1)
-print(globals.thread1running)
+
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
@@ -27,6 +27,12 @@ class Thread1(QtCore.QThread):
 			self.count += 1
 			time.sleep(1)
 			self.sig1.emit(str(self.count))
+
+			print(configLoader.TimeAEnabled)
+			print(configLoader.TimeBEnabled)
+			print(configLoader.delayStage)
+			print(configLoader.startCheck)
+			print(configLoader.postCooldown)
 
 class Ui_MainWindow(object):
 	def setupUi(self, MainWindow):
@@ -132,12 +138,14 @@ class Ui_MainWindow(object):
 		self.checkATimerEnable = QtWidgets.QCheckBox(self.formLayoutWidget_2)
 		self.checkATimerEnable.setObjectName("checkATimerEnable")
 		self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.checkATimerEnable)
-		
+		self.checkATimerEnable.stateChanged.connect(self.TimerASetting)
+
 		#B Time Enable
 		self.checkBTimerEnable = QtWidgets.QCheckBox(self.formLayoutWidget_2)
 		self.checkBTimerEnable.setObjectName("checkBTimerEnable")
 		self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.checkBTimerEnable)
-		
+		self.checkBTimerEnable.stateChanged.connect(self.TimerBSetting)
+
 		#Delay After Staging
 		self.delayAfterStagingLabel = QtWidgets.QLabel(self.formLayoutWidget_2)
 		self.delayAfterStagingLabel.setObjectName("delayAfterStagingLabel")
@@ -152,7 +160,8 @@ class Ui_MainWindow(object):
 		self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
 		self.line_3.setObjectName("line_3")
 		self.formLayout_2.setWidget(3, QtWidgets.QFormLayout.SpanningRole, self.line_3)
-		
+		self.textStageDelay.textChanged.connect(self.StageDelaySetting)
+
 		#Check Delay
 		self.checkDelayLabel = QtWidgets.QLabel(self.formLayoutWidget_2)
 		self.checkDelayLabel.setObjectName("checkDelayLabel")
@@ -160,7 +169,8 @@ class Ui_MainWindow(object):
 		self.textCheckDelay = QtWidgets.QLineEdit(self.formLayoutWidget_2)
 		self.textCheckDelay.setObjectName("textCheckDelay")
 		self.formLayout_2.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.textCheckDelay)
-		
+		self.textCheckDelay.textChanged.connect(self.CheckDelaySetting)
+
 		#Cooldown
 		self.cooldownDelayLabel = QtWidgets.QLabel(self.formLayoutWidget_2)
 		self.cooldownDelayLabel.setObjectName("cooldownDelayLabel")
@@ -169,7 +179,7 @@ class Ui_MainWindow(object):
 		self.textCooldown.setObjectName("textCooldown")
 		self.formLayout_2.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.textCooldown)
 		self.horizontalLayout_3.addWidget(self.widget_3)
-		
+		self.textCooldown.textChanged.connect(self.CooldownDelaySetting)
 		
 		#----
 
@@ -218,6 +228,36 @@ class Ui_MainWindow(object):
 		self.TimerBLabel.setText(_translate("MainWindow", "Timer B"))
 		self.TimerBTime.setText(_translate("MainWindow", "0:00.00"))
 
+	#---
+	def TimerASetting(self):
+		if self.checkATimerEnable.isChecked():
+			print("Timer A Checked")
+			configLoader.TimeAEnabled = True
+		else:
+			print("Timer A Unchecked")
+			configLoader.TimeAEnabled = False
+
+	def TimerBSetting(self):
+		if self.checkBTimerEnable.isChecked():
+			print("Timer B Checked")
+			configLoader.TimeBEnabled = True
+		else:
+			print("Timer B Unchecked")
+			configLoader.TimeBEnabled = False
+
+	def StageDelaySetting(self, text): #Pre
+		print("Stage Delay Value Changed: " + text)
+		configLoader.delayStage = text
+
+	def CheckDelaySetting(self, text): #Wait
+		print("Check Delay Value Changed: " + text)
+		configLoader.startCheck = text
+
+	def CooldownDelaySetting(self, text): #Post
+		print("Cooldown Delay Value Changed: " + text)
+		configLoader.postCooldown = text
+	#---
+
 	def setWindowInfo(self, MainWindow):
 		MainWindow.setWindowTitle(_translate("MainWindow", "Speed Controller"))
 		MainWindow.setWindowIcon(QtGui.QIcon(__location__ + os.path.sep + "Resources" + os.path.sep + "Icon.jpg"))
@@ -225,7 +265,7 @@ class Ui_MainWindow(object):
 	def onStart(self):
 		if globals.controlEnabled == True:
 			globals.controlEnabled = False
-			self.pushController.setText(_translate("MainWindow", "Stop"))
+			self.pushController.setText(_translate("MainWindow", "Abort"))
 			print("Running")
 			self.thread1 = Thread1()
 			self.thread1.sig1.connect(self.response)
