@@ -11,3 +11,7 @@ Once I am satisfied with the state of the project, I will do an official release
 https://www.zeolearn.com/magazine/getting-started-guis-with-python-pyqt-qthread-class
 
 https://docs.python.org/3/library/configparser.html
+
+https://stackoverflow.com/questions/30462078/using-a-checkbox-in-pyqt
+
+https://stackoverflow.com/questions/23314263/pyqt-check-if-value-of-lineedit-changed
