@@ -1,8 +1,8 @@
 import globals
 import configLoader
-from keyboard import *
 from timeKeeper import *
 import time
+import datetime
 import sys, os
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 from time import sleep
@@ -52,14 +52,14 @@ class Run(QtCore.QThread):
 					globals.timePoint = 0
 					break
 
-
+		playState = 0
+		played = False
 		while globals.runthreadrunning == True and globals.controlState > -1:
 			self.textStatus.emit("Countdown\nRunning")
 
 			if globals.controlState == 0: #Countdown
 				if globals.timePoint == 0:
-					playState = 0
-					played = False
+
 					globals.timePoint = time.time()
 
 				if configLoader.TimeAEnabled == True:
@@ -102,13 +102,13 @@ class Run(QtCore.QThread):
 					if globals.timeBactive == True:
 						self.bColour.emit(str((16,220,2)))
 
-				if InputCheck.getLeftShiftPressed() == True and globals.timeAactive == True:
-					globals.timeAactive = False
-					FalseStart.play()
+				#if InputCheck.getLeftShiftPressed() == True and globals.timeAactive == True:
+				#	globals.timeAactive = False
+				#	FalseStart.play()
 		
-				if InputCheck.getRightShiftPressed() == True and globals.timeBactive == True:
-					globals.timeBactive = False
-
+				#if InputCheck.getRightShiftPressed() == True and globals.timeBactive == True:
+				#	globals.timeBactive = False
+				#
 				if globals.timeAactive == True:
 					self.aTime.emit(str(timeKeeper.timeDif(globals.timePoint, time.time())))
 				if globals.timeBactive == True:
@@ -118,3 +118,5 @@ class Run(QtCore.QThread):
 				print("")
 
 		print("Run Thread Exited")
+		globals.controlState = 0
+		globals.timePoint = 0

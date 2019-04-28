@@ -6,7 +6,7 @@ globals.init()
 import GUI
 import configLoader
 configLoader.init()
-
+import test
 time.sleep(1)
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -20,8 +20,7 @@ _translate = QtCore.QCoreApplication.translate
 
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
-	MainWindow = QtWidgets.QMainWindow()
-	ui = GUI.Ui_MainWindow()
-	ui.setupUi(MainWindow)
-	MainWindow.show()
+	#ui = GUI.MainWindow()
+	ui = test.MainWindow()
+	ui.show()
 	sys.exit(app.exec_())

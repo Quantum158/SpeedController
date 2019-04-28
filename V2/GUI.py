@@ -49,7 +49,7 @@ class Ui_MainWindow(object):
 		#Timer A Timer
 		self.TimerATime = QtWidgets.QLabel(self.widget)
 		self.TimerATime.setGeometry(QtCore.QRect(0, 530, 261, 51))
-		self.TimerATime.setStyleSheet("font: 40pt \"Calibri\";")
+		self.TimerATime.setStyleSheet("font: 40pt \"Lucida Console\";")
 		self.TimerATime.setAlignment(QtCore.Qt.AlignCenter)
 		self.TimerATime.setObjectName("TimerATime")
 
@@ -175,7 +175,7 @@ class Ui_MainWindow(object):
 		#Timer B Timer
 		self.TimerBTime = QtWidgets.QLabel(self.widget_2)
 		self.TimerBTime.setGeometry(QtCore.QRect(0, 530, 261, 51))
-		self.TimerBTime.setStyleSheet("font: 40pt \"Calibri\";")
+		self.TimerBTime.setStyleSheet("font: 40pt \"Lucida Console\";")
 		self.TimerBTime.setAlignment(QtCore.Qt.AlignCenter)
 		self.TimerBTime.setObjectName("TimerBTime")
 		self.horizontalLayout_3.addWidget(self.widget_2)
@@ -276,3 +276,14 @@ class Ui_MainWindow(object):
 
 	def textStatusUpdate(self, text):
 		self.textStatus.setText(_translate("MainWindow", text))
+
+
+
+class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+	def __init__(self, parent=None):
+		QtWidgets.QMainWindow.__init__(self, parent=parent)
+		self.setupUi(self)
+
+	def keyPressEvent(self, e):
+		if e.key() == QtCore.Qt.Key_Left:
+			print("left")

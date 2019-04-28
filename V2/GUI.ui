@@ -58,7 +58,7 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QWidget" name="widget" native="true">
+      <widget class="QWidget" name="AHalf" native="true">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(0, 0, 255);</string>
        </property>
@@ -99,6 +99,40 @@ text-decoration: underline;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="AFalseStart">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>70</y>
+          <width>201</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;; background-color: rgb(190, 190, 190);</string>
+        </property>
+        <property name="text">
+         <string>False Start
+(Shift+Left Arrow)</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="AStopTime">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>460</y>
+          <width>201</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;; background-color: rgb(190, 190, 190);</string>
+        </property>
+        <property name="text">
+         <string>Stop Time
+(Left Arrow)</string>
         </property>
        </widget>
       </widget>
@@ -200,11 +234,17 @@ text-decoration: underline;</string>
           <height>0</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="styleSheet">
          <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
         </property>
         <property name="lineWidth">
          <number>7</number>
+        </property>
+        <property name="midLineWidth">
+         <number>0</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -236,7 +276,7 @@ text-decoration: underline;</string>
           <x>0</x>
           <y>380</y>
           <width>261</width>
-          <height>151</height>
+          <height>167</height>
          </rect>
         </property>
         <layout class="QFormLayout" name="formLayout_2">
@@ -258,13 +298,6 @@ text-decoration: underline;</string>
           <widget class="QLabel" name="delayAfterStagingLabel">
            <property name="text">
             <string>Delay After Staging</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="textStageDelay">
-           <property name="text">
-            <string>0</string>
            </property>
           </widget>
          </item>
@@ -291,13 +324,6 @@ text-decoration: underline;</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
-          <widget class="QLineEdit" name="textCheckDelay">
-           <property name="text">
-            <string>2</string>
-           </property>
-          </widget>
-         </item>
          <item row="5" column="0">
           <widget class="QLabel" name="cooldownDelayLabel">
            <property name="text">
@@ -305,19 +331,24 @@ text-decoration: underline;</string>
            </property>
           </widget>
          </item>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="StageDelaySpin"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QSpinBox" name="CheckDelaySpin"/>
+         </item>
          <item row="5" column="1">
-          <widget class="QLineEdit" name="textCooldown">
-           <property name="text">
-            <string>3</string>
-           </property>
-          </widget>
+          <widget class="QSpinBox" name="CooldownSpin"/>
          </item>
         </layout>
        </widget>
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="widget_2" native="true">
+      <widget class="QWidget" name="BHalf" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 0, 0);</string>
        </property>
@@ -351,13 +382,63 @@ text-decoration: underline;</string>
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">font: 40pt &quot;Calibri&quot;;</string>
+         <string notr="true">font: 40pt &quot;Calibri&quot;;
+</string>
         </property>
         <property name="text">
          <string>0:00.00</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="BStopTime">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>460</y>
+          <width>201</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;; background-color: rgb(190, 190, 190);</string>
+        </property>
+        <property name="text">
+         <string>Stop Time
+(Right Arrow)</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="BFalseStart">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>70</y>
+          <width>201</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;; background-color: rgb(190, 190, 190);</string>
+        </property>
+        <property name="text">
+         <string>False Start
+(Shift+Right Arrow)</string>
         </property>
        </widget>
       </widget>
