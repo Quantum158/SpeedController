@@ -11,6 +11,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtCore import pyqtSignal
 
+_translate = QtCore.QCoreApplication.translate
 class ApplicationWindow(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(ApplicationWindow, self).__init__()
@@ -22,8 +23,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.ui.checkATimerEnable.stateChanged.connect(self.TimerASetting)
 		self.ui.checkBTimerEnable.stateChanged.connect(self.TimerBSetting)
 		self.ui.StageDelaySpin.valueChanged.connect(self.StageDelaySetting)
-		self.ui.CheckDelaySpin.valueChanged.connect(self.StageDelaySetting)
+		#self.ui.CheckDelaySpin.valueChanged.connect(self.StageDelaySetting)
 		self.ui.CooldownSpin.valueChanged.connect(self.CooldownDelaySetting)
+		self.ui.AStopTime.clicked.connect(self.AStopTime)
+		self.ui.BStopTime.clicked.connect(self.BStopTime)
+		#self.ui.AFalseStart.clicked.connect(self.AFalseStart)
+		#self.ui.BFalseStart.clicked.connect(self.BFalseStart)
 
 		#QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -58,11 +63,26 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 	def CooldownDelaySetting(self, text): #Post
 		print("Cooldown Delay Value Changed: " + text)
 		configLoader.postCooldown = text
+
+	def AStopTime(self):
+		if globals.LControlEnabled == True:
+			globals.timeAactive = False
+
+	def BStopTime(self):
+		if globals.RControlEnabled == True:
+			globals.timeBactive = False
+
+	#def AFalseStart(self):
+
+
+	#def BFalseStart(self):
+
+
 	#---
 
 	def onStart(self):
-		if globals.controlEnabled == True:
-			globals.controlEnabled = False
+		if globals.StartEnabled == True:
+			globals.StartEnabled = False
 			self.ui.textStatus.setText(_translate("MainWindow", "Initializing..."))
 			self.ui.pushController.setText(_translate("MainWindow", "Abort"))
 			print("Running")
@@ -75,12 +95,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			return self.run.start()
 
 
-		if globals.controlEnabled == False:
+		if globals.StartEnabled == False:
 			print("Attempting to Stop")
 			globals.runthreadrunning = False
 			globals.controlState = -1
 			time.sleep(1)
-			globals.controlEnabled = True
+			globals.StartEnabled = True
 			return self.ui.pushController.setText(_translate("MainWindow", "Start"))
 	
 	def aTimeUpdate(self, text):
@@ -98,22 +118,24 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 	def textStatusUpdate(self, text):
 		self.ui.textStatus.setText(_translate("MainWindow", text))
 
-class MainWindow(QtWidgets.QMainWindow, ApplicationWindow):
+
+class MainWindow(ApplicationWindow, QtWidgets.QMainWindow):
 	def __init__(self, parent=None):
 		QtWidgets.QMainWindow.__init__(self, parent=parent)
-		ApplicationWindow.init()
-
+		ApplicationWindow()
+					
 	def keyPressEvent(self, e):
 		if e.key() == QtCore.Qt.Key_Escape:
+			print("Escape!")
 			sys.exit()
 
-def main():
-	app = QtWidgets.QApplication(sys.argv)
-	application = MainWindow()
-	application.show()
-	sys.exit(app.exec_())
+#def main():
+#	app = QtWidgets.QApplication(sys.argv)
+#	application = MainWindow()
+#	application.show()
+#	sys.exit(app.exec_())
 
 
 
-if __name__ == "__main__":
-	main()
+#if __name__ == "__main__":
+#	main()

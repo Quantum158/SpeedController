@@ -319,6 +319,9 @@ text-decoration: underline;</string>
          </item>
          <item row="4" column="0">
           <widget class="QLabel" name="checkDelayLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Start Check Delay</string>
            </property>
@@ -335,7 +338,11 @@ text-decoration: underline;</string>
           <widget class="QSpinBox" name="StageDelaySpin"/>
          </item>
          <item row="4" column="1">
-          <widget class="QSpinBox" name="CheckDelaySpin"/>
+          <widget class="QSpinBox" name="CheckDelaySpin">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
          </item>
          <item row="5" column="1">
           <widget class="QSpinBox" name="CooldownSpin"/>

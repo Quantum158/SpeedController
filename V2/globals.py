@@ -1,6 +1,13 @@
 def init():
-	global controlEnabled
-	controlEnabled = True
+	global StartEnabled
+	StartEnabled = True
+
+	global LControlEnabled
+	LControlEnabled = True
+	
+	global RControlEnabled
+	RControlEnabled = True
+
 	global runthreadrunning
 	runthreadrunning = False
 

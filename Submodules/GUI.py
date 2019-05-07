@@ -47,6 +47,7 @@ class GUI:
 			textPrint.print(screen, "Right Lane Time: {}".format(rightDisplayTime))
 		else:
 			textPrint.print(screen, "Right Lane Time: Offline")
+
 		if cooldown == in_cooldown * framerate + framerate:
 			textPrint.print(screen, "Cooldown: Please release the Spacebar")
 		if cooldown > 0 and cooldown != (in_cooldown * framerate + framerate):

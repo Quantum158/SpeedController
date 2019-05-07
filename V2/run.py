@@ -45,7 +45,7 @@ class Run(QtCore.QThread):
 		if int(configLoader.delayStage) > 0:
 			globals.controlState = -1
 			globals.timePoint = time.time()
-			self.textStatus.emit("Delay set for\n" + configLoader.delayStage + " seconds")
+			self.textStatus.emit("Delay set for\n" + str(configLoader.delayStage) + " seconds")
 			while globals.runthreadrunning == True:
 				if timeKeeper.timeCheck(globals.timePoint, int(configLoader.delayStage), time.time()) == True:
 					globals.controlState = 0
@@ -55,11 +55,9 @@ class Run(QtCore.QThread):
 		playState = 0
 		played = False
 		while globals.runthreadrunning == True and globals.controlState > -1:
-			self.textStatus.emit("Countdown\nRunning")
-
 			if globals.controlState == 0: #Countdown
 				if globals.timePoint == 0:
-
+					self.textStatus.emit("Countdown\nRunning")
 					globals.timePoint = time.time()
 
 				if configLoader.TimeAEnabled == True:
@@ -97,6 +95,7 @@ class Run(QtCore.QThread):
 			if globals.controlState == 1: #Timers Running
 				if globals.timePoint == 0:
 					globals.timePoint = time.time()
+					self.textStatus.emit("Timer Active")
 					if globals.timeAactive == True:
 						self.aColour.emit(str((16,220,2)))
 					if globals.timeBactive == True:

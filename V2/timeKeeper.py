@@ -16,6 +16,7 @@ class timeKeeper:
 			return False
 
 	def timeConverter(seconds):
+		132.14
 		s, f = divmod(seconds, 1)
 		m, s = divmod(s, 60)
 		m = int(m)
