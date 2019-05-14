@@ -96,11 +96,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 
 		if globals.StartEnabled == False:
+			self.ui.textStatus.setText(_translate("MainWindow", "Aborting..."))
 			print("Attempting to Stop")
 			globals.runthreadrunning = False
 			globals.controlState = -1
 			time.sleep(1)
 			globals.StartEnabled = True
+			self.ui.textStatus.setText(_translate("Mainwindow", "Ready..."))
 			return self.ui.pushController.setText(_translate("MainWindow", "Start"))
 	
 	def aTimeUpdate(self, text):
