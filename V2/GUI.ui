@@ -276,7 +276,7 @@ text-decoration: underline;</string>
           <x>0</x>
           <y>380</y>
           <width>261</width>
-          <height>167</height>
+          <height>186</height>
          </rect>
         </property>
         <layout class="QFormLayout" name="formLayout_2">
@@ -300,6 +300,9 @@ text-decoration: underline;</string>
             <string>Delay After Staging</string>
            </property>
           </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="StageDelaySpin"/>
          </item>
          <item row="3" column="0" colspan="2">
           <widget class="Line" name="line_3">
@@ -327,16 +330,6 @@ text-decoration: underline;</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="cooldownDelayLabel">
-           <property name="text">
-            <string>Cooldown Delay</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QSpinBox" name="StageDelaySpin"/>
-         </item>
          <item row="4" column="1">
           <widget class="QSpinBox" name="CheckDelaySpin">
            <property name="enabled">
@@ -344,8 +337,36 @@ text-decoration: underline;</string>
            </property>
           </widget>
          </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="cooldownDelayLabel">
+           <property name="text">
+            <string>Cooldown Delay</string>
+           </property>
+          </widget>
+         </item>
          <item row="5" column="1">
           <widget class="QSpinBox" name="CooldownSpin"/>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Pacer Beeps</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QSpinBox" name="PacerBeepsSpin"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Second(s)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>

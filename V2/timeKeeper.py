@@ -9,14 +9,16 @@ class timeKeeper:
 		
 
 	def timeCheck(timeStart, waitTime, currentTime):
-		if (round(round(currentTime, 2) - round(timeStart, 2), 1)) == waitTime:
+		a = round(timeStart, 0)
+		b = round(currentTime, 0)
+		c = round(waitTime, 0)
+		if (b - a) == c:
 			#print(round(round(currentTime, 2) - round(timeStart, 2), 2))
 			return True
 		else:
 			return False
 
 	def timeConverter(seconds):
-		132.14
 		s, f = divmod(seconds, 1)
 		m, s = divmod(s, 60)
 		m = int(m)
@@ -28,5 +30,4 @@ class timeKeeper:
 		f = int(round(f, 2)*100)
 		if len(str(f)) < 2:
 			f = str(0) + str(f)
-		print(str(m) + ":" + str(s) + "." + str(f))
 		return(str(m) + ":" + str(s) + "." + str(f))

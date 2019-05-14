@@ -14,5 +14,7 @@ delays = dict(
 
 	Start_Check_Delay = 2, #In Seconds
 
-	Post_Sequence_Cooldown = 3 #In Seconds
+	Post_Sequence_Cooldown = 3, #In Seconds
+
+	PacerBeeps = 0 #Number of Beeps, 1 per Second
 	)

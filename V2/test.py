@@ -25,6 +25,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.ui.StageDelaySpin.valueChanged.connect(self.StageDelaySetting)
 		#self.ui.CheckDelaySpin.valueChanged.connect(self.StageDelaySetting)
 		self.ui.CooldownSpin.valueChanged.connect(self.CooldownDelaySetting)
+		self.ui.PacerBeepsSpin.valueChanged.connect(self.PacerBeepsSetting)
 		self.ui.AStopTime.clicked.connect(self.AStopTime)
 		self.ui.BStopTime.clicked.connect(self.BStopTime)
 		#self.ui.AFalseStart.clicked.connect(self.AFalseStart)
@@ -57,12 +58,16 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		configLoader.delayStage = text
 
 	def CheckDelaySetting(self, text): #Wait
-		print("Check Delay Value Changed: " + text)
+		print("Check Delay Value Changed: " + str(text))
 		configLoader.startCheck = text
 
 	def CooldownDelaySetting(self, text): #Post
-		print("Cooldown Delay Value Changed: " + text)
+		print("Cooldown Delay Value Changed: " + str(text))
 		configLoader.postCooldown = text
+
+	def PacerBeepsSetting(self, text): #Pacer Beeps
+		print("Pacer Beeps Value Changed: " + str(text))
+		configLoader.PacerBeeps = text
 
 	def AStopTime(self):
 		if globals.LControlEnabled == True:
@@ -109,13 +114,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.ui.TimerATime.setText(_translate("MainWindow", text))
 
 	def aColourUpdate(self, colour):
-		self.ui.widget.setStyleSheet("background-color: rgb" + colour +";")
+		self.ui.AHalf.setStyleSheet("background-color: rgb" + colour +";")
 
 	def bTimeUpdate(self, text):
 		self.ui.TimerBTime.setText(_translate("MainWindow", text))
 
 	def bColourUpdate(self, colour):
-		self.ui.widget_2.setStyleSheet("background-color: rgb" + colour +";")
+		self.ui.BHalf.setStyleSheet("background-color: rgb" + colour +";")
 
 	def textStatusUpdate(self, text):
 		self.ui.textStatus.setText(_translate("MainWindow", text))

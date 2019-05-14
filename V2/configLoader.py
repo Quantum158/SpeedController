@@ -12,4 +12,6 @@ def init():
 	startCheck = config.delays['Start_Check_Delay'] #How long the user must hold spacebar before locking in (likely deprecated)
 	global postCooldown 
 	postCooldown = config.delays['Post_Sequence_Cooldown'] #How long the app waits after a sequence has been completed
+	global PacerBeeps
+	PacerBeeps = config.delays['PacerBeeps'] #Pacer Beeps
 	print("Config Initialized!")

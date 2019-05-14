@@ -1,13 +1,12 @@
+import globals
+globals.init()
+import configLoader
+configLoader.init()
 import sys, os
 import time
 from time import sleep
-import globals
-globals.init()
 import GUI
-import configLoader
 import test
-configLoader.init()
-#import test
 time.sleep(1)
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
