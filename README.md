@@ -1,4 +1,4 @@
-# Temporary Edit for proof I own this for CALM
+# Temporary Edit For CALM
 Hi Ms. Haz! :)
 
 
