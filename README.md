@@ -1,7 +1,3 @@
-# Temporary Edit For CALM
-Hi Ms. Haz! :)
-
-
 # Why no development?
 This project has been temporarily postponed until some further testing has been completed and I am more experienced on using the UI framework (and I have more time)
 
