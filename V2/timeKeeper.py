@@ -17,6 +17,11 @@ class timeKeeper:
 			return True
 		else:
 			return False
+	def counter(timeStart, currentTime, totalDelay):
+		a = round(timeStart, 2)
+		b = round(currentTime, 2)
+		timePassed = b - a
+		return round(totalDelay - timePassed, 1)
 
 	def timeConverter(seconds):
 		s, f = divmod(seconds, 1)

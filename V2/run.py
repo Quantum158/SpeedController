@@ -48,7 +48,7 @@ class Run(QtCore.QThread):
 
 		sleep(1)
 		if int(configLoader.delayStage) > 0:
-			globals.controlState = -1
+			globals.controlState = -1 #Hold start
 			globals.timePoint = time.time()
 			self.textStatus.emit("Delay set for\n" + str(configLoader.delayStage) + " seconds")
 			while globals.runthreadrunning == True:
@@ -56,6 +56,10 @@ class Run(QtCore.QThread):
 					globals.controlState = 0
 					globals.timePoint = 0
 					break
+				else:
+					sleep(0.01)
+					self.textStatus.emit(str(timeKeeper.counter(globals.timePoint, time.time(), int(configLoader.delayStage))))
+				
 
 		playState = 0
 		played = False
