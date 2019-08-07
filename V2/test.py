@@ -125,16 +125,17 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 	def textStatusUpdate(self, text):
 		self.ui.textStatus.setText(_translate("MainWindow", text))
 
+	def keyPressEvent(self, e):
+		if e.key() == QtCore.Qt.Key_Escape:
+			print("Escape!")
+			sys.exit()
+
 
 class MainWindow(ApplicationWindow, QtWidgets.QMainWindow):
 	def __init__(self, parent=None):
 		QtWidgets.QMainWindow.__init__(self, parent=parent)
 		ApplicationWindow()
 					
-	def keyPressEvent(self, e):
-		if e.key() == QtCore.Qt.Key_Escape:
-			print("Escape!")
-			sys.exit()
 
 #def main():
 #	app = QtWidgets.QApplication(sys.argv)
