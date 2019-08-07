@@ -19,3 +19,4 @@ https://stackoverflow.com/questions/30462078/using-a-checkbox-in-pyqt
 https://stackoverflow.com/questions/23314263/pyqt-check-if-value-of-lineedit-changed
 
 https://riverbankcomputing.com/pipermail/pyqt/2009-March/022345.html
+
