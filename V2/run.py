@@ -7,7 +7,7 @@ import sys, os
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 from time import sleep
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QTimer, QThread
 from pygame import mixer
 
 mixer.init()
@@ -16,19 +16,20 @@ HighTone = mixer.Sound(os.path.join(__location__, "Resources", "Sounds" , "HighT
 FalseStart = mixer.Sound(os.path.join(__location__, "Resources", "Sounds" , "FalseStart.ogg"))
 PacerTone = mixer.Sound(os.path.join(__location__, "Resources", "Sounds" , "PacerTone.ogg"))
 
-class Run(QtCore.QThread):
+class Run(QThread):
 	aTime = pyqtSignal(str)
 	aColour = pyqtSignal(str)
 	bTime = pyqtSignal(str)
 	bColour = pyqtSignal(str)
 	textStatus = pyqtSignal(str)
+	buttonText = pyqtSignal(str)
 	goProFail = pyqtSignal()
 	endThreadReset = pyqtSignal()
 	keepalivethread = pyqtSignal()
 
 	def __init__(self, parent=None):
 		QtCore.QThread.__init__(self, parent)
-	
+		
 	def run(self):
 		globals.keepaliverunning = False #Disable keep alive thread for gopro
 
@@ -43,8 +44,10 @@ class Run(QtCore.QThread):
 			self.bColour.emit(str((255,191,0)))
 			self.textStatus.emit("Checking GoPro\nConnection")
 
-			if goPro.cameraCheck(self) == True:
+			if goPro.cameraCheck() == True:
 				goPro.forceToVideoMode()
+				self.aColour.emit(str((255,255,255)))
+				self.bColour.emit(str((255,255,255)))
 				pass
 			else:
 				self.textStatus.emit("GoPro Connection\nFailed!")
@@ -77,7 +80,7 @@ class Run(QtCore.QThread):
 			self.aColour.emit(str((255,191,0)))
 			self.bColour.emit(str((255,191,0)))
 			#self.textStatus.emit("Delay set for\n" + str(configLoader.delayStage) + " seconds")
-			if globals.goPro == True: #Camera Beeps to alert people to get away from the lens
+			if globals.goPro == True and globals.goProWarnings == True: #Camera Beeps to alert people to get away from the lens
 				goPro.enableLocate()
 
 			while globals.runthreadrunning == True:
@@ -97,8 +100,11 @@ class Run(QtCore.QThread):
 		
 		while globals.runthreadrunning == True and globals.controlState > -1:
 			if globals.recording == False and globals.goPro == True: #Start Recording on Camera
-				self.textStatus.emit("Starting Recording")
+				globals.recording = True
 				goPro.triggerShutter()
+				sleep(1)
+				self.textStatus.emit("Starting Recording")
+				self.buttonText.emit("Stop Record")
 				sleep(1)
 
 			if globals.controlState == 0: #Countdown
@@ -174,20 +180,25 @@ class Run(QtCore.QThread):
 				globals.runthreadrunning = False
 			
 			sleep(0.016)
-				
-		print("Run Thread Exited")
-		if globals.recording == True:
-			goPro.stopShutter()
+		#End of Loop
+		
+		if globals.error == False:
+			if globals.goPro == True:
+				goPro.disableLocate()
 			
-		if globals.error == True:
+		else:
 			self.aColour.emit(str((220,16,2)))
 			self.bColour.emit(str((220,16,2)))
-		
-		self.endThreadReset.emit()
+			
+			self.endThreadReset.emit()
 
-		if globals.goPro == True: #Restart Camera, because it likes to turn off after the recording stops
-			sleep(2)
-			goPro.WOL()
-			self.keepalivethread.emit()
+			if globals.goPro == True:
+				goPro.disableLocate()
 
-		
+			if globals.recording == True:
+				goPro.stopShutter()
+				sleep(2)
+				goPro.WOL()
+				self.keepalivethread.emit()
+
+		print("Run Thread Exited")

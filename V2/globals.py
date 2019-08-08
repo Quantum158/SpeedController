@@ -23,6 +23,12 @@ def init():
 	global goPro
 	goPro = False
 
+	global goProWarnings
+	goProWarnings = False
+
+	global goProFirstConnect
+	goProFirstConnect = 0
+
 	global recording
 	recording = False
 

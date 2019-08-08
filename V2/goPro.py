@@ -5,11 +5,11 @@ from time import sleep
 
 class goPro:
     checkUrl = 'http://10.5.5.9/gp/gpControl/status'
-    def cameraCheck(ui):
+    def cameraCheck():
         if goPro.testInternet() == True:
             return True
         else:
-            ui.textStatus.emit("Attempting to\nWake Camera")
+            print("WOL")
             if goPro.WOL() == True:
                 if goPro.testInternet() == True:
                     return True
@@ -54,18 +54,21 @@ class goPro:
             sleep(2)
             urllib.request.urlopen(urls[0], None, 3)
         except Exception:
+            print("Force to Video Error")
             globals.error = True
 
     def enableLocate():
         try:
             urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/system/locate?p=1')
         except Exception:
+            print("Enable Locate Error")
             globals.error = True
 
     def disableLocate():
         try:
             urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/system/locate?p=0')
         except Exception:
+            print("Disable Locate Error")
             globals.error = True
 
     def triggerShutter():
@@ -73,6 +76,7 @@ class goPro:
             urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=1')
             globals.recording = 1
         except Exception:
+            print("Trigger Shutter Error")
             globals.error = True
 
     def stopShutter():
@@ -80,4 +84,5 @@ class goPro:
             urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=0')
             globals.recording = 0
         except Exception:
+            print("Stop Shutter Error")
             globals.error = True
