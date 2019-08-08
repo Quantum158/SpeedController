@@ -60,7 +60,7 @@
      <item>
       <widget class="QWidget" name="AHalf" native="true">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <widget class="QLabel" name="TimerALabel">
         <property name="geometry">
@@ -276,7 +276,7 @@ text-decoration: underline;</string>
           <x>0</x>
           <y>380</y>
           <width>261</width>
-          <height>186</height>
+          <height>218</height>
          </rect>
         </property>
         <layout class="QFormLayout" name="formLayout_2">
@@ -294,17 +294,17 @@ text-decoration: underline;</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QLabel" name="delayAfterStagingLabel">
            <property name="text">
             <string>Delay After Staging</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
+         <item row="3" column="1">
           <widget class="QSpinBox" name="StageDelaySpin"/>
          </item>
-         <item row="3" column="0" colspan="2">
+         <item row="4" column="0" colspan="2">
           <widget class="Line" name="line_3">
            <property name="minimumSize">
             <size>
@@ -320,7 +320,7 @@ text-decoration: underline;</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
+         <item row="5" column="0">
           <widget class="QLabel" name="checkDelayLabel">
            <property name="enabled">
             <bool>false</bool>
@@ -330,34 +330,38 @@ text-decoration: underline;</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
+         <item row="5" column="1">
           <widget class="QSpinBox" name="CheckDelaySpin">
            <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="5" column="0">
+         <item row="6" column="0">
           <widget class="QLabel" name="cooldownDelayLabel">
            <property name="text">
             <string>Cooldown Delay</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
+         <item row="6" column="1">
           <widget class="QSpinBox" name="CooldownSpin"/>
          </item>
-         <item row="6" column="0">
+         <item row="7" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Pacer Beeps</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
+         <item row="7" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QSpinBox" name="PacerBeepsSpin"/>
+            <widget class="QSpinBox" name="PacerBeepsSpin">
+             <property name="keyboardTracking">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QLabel" name="label_2">
@@ -367,6 +371,20 @@ text-decoration: underline;</string>
             </widget>
            </item>
           </layout>
+         </item>
+         <item row="8" column="0">
+          <widget class="Line" name="line_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="checkGoProCommands">
+           <property name="text">
+            <string>Send Gopro Signals</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -378,7 +396,7 @@ text-decoration: underline;</string>
         <bool>true</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 0, 0);</string>
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <widget class="QLabel" name="TimerBLabel">
         <property name="geometry">

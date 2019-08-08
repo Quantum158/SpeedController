@@ -1,6 +1,7 @@
 import globals
 import configLoader
 from timeKeeper import *
+from goPro import *
 import time
 import datetime
 import sys, os
@@ -22,6 +23,8 @@ class Run(QtCore.QThread):
 	bTime = pyqtSignal(str)
 	bColour = pyqtSignal(str)
 	textStatus = pyqtSignal(str)
+	goProFail = pyqtSignal()
+	endThreadReset = pyqtSignal()
 
 	def __init__(self, parent=None):
 		QtCore.QThread.__init__(self, parent)
@@ -32,6 +35,25 @@ class Run(QtCore.QThread):
 			currentBeep = 1
 		globals.controlState = 0
 		globals.runthreadrunning = True
+
+		if globals.goPro == True:
+			self.aColour.emit(str((255,191,0)))
+			self.bColour.emit(str((255,191,0)))
+			self.textStatus.emit("Checking GoPro\nConnection")
+
+			if goPro.cameraCheck(self) == True:
+				goPro.forceToVideoMode()
+				pass
+			else:
+				self.textStatus.emit("GoPro Connection\nFailed!")
+				self.aColour.emit(str((220,16,2)))
+				self.bColour.emit(str((220,16,2)))
+				self.goProFail.emit()
+				globals.runthreadrunning = False
+				globals.controlState = -1
+				globals.error = True
+
+
 		if configLoader.TimeAEnabled == True:
 			self.aTime.emit("00:00.00")
 		
@@ -50,20 +72,32 @@ class Run(QtCore.QThread):
 		if int(configLoader.delayStage) > 0:
 			globals.controlState = -1 #Hold start
 			globals.timePoint = time.time()
-			self.textStatus.emit("Delay set for\n" + str(configLoader.delayStage) + " seconds")
+			self.aColour.emit(str((255,191,0)))
+			self.bColour.emit(str((255,191,0)))
+			#self.textStatus.emit("Delay set for\n" + str(configLoader.delayStage) + " seconds")
+			if globals.goPro == True: #Camera Beeps to alert people to get away from the lens
+				goPro.enableLocate()
+
 			while globals.runthreadrunning == True:
 				if timeKeeper.timeCheck(globals.timePoint, int(configLoader.delayStage), time.time()) == True:
 					globals.controlState = 0
 					globals.timePoint = 0
+					if globals.goPro == True:
+						goPro.disableLocate()
 					break
 				else:
 					sleep(0.01)
-					self.textStatus.emit(str(timeKeeper.counter(globals.timePoint, time.time(), int(configLoader.delayStage))))
+					self.textStatus.emit("Starting in\n" + str(timeKeeper.counter(globals.timePoint, time.time(), int(configLoader.delayStage))))
 				
 
 		playState = 0
 		played = False
+		
 		while globals.runthreadrunning == True and globals.controlState > -1:
+			if globals.recording == False and globals.goPro == True: #Start Recording on Camera
+				goPro.triggerShutter()
+				sleep(1)
+
 			if globals.controlState == 0: #Countdown
 				if globals.timePoint == 0:
 					self.textStatus.emit("Countdown\nRunning")
@@ -131,12 +165,22 @@ class Run(QtCore.QThread):
 
 				if globals.timeAactive == False and globals.timeBactive == False:
 					self.textStatus.emit("Both Timers\nStopped!")
+					globals.controlState = 2
 				
 			if globals.controlState == 2: #Timers Stopped
-				print("")
+				globals.runthreadrunning = False
 			
 			sleep(0.016)
 				
 		print("Run Thread Exited")
-		globals.controlState = 0
-		globals.timePoint = 0
+		if globals.recording == True:
+			goPro.stopShutter()
+			
+		if globals.error == True:
+			self.aColour.emit(str((220,16,2)))
+			self.bColour.emit(str((220,16,2)))
+		
+		self.endThreadReset.emit()
+
+
+		

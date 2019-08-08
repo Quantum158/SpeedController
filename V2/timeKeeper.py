@@ -8,15 +8,22 @@ class timeKeeper:
 		return timeKeeper.timeConverter(currentTime - timeStart)
 		
 
-	def timeCheck(timeStart, waitTime, currentTime):
-		a = round(timeStart, 0)
-		b = round(currentTime, 0)
-		c = round(waitTime, 0)
-		if (b - a) == c:
-			#print(round(round(currentTime, 2) - round(timeStart, 2), 2))
-			return True
+	def timeCheck(timeStart, waitTime, currentTime, exact = True):
+		a = round(timeStart, 1)
+		b = round(currentTime, 1)
+		c = round(waitTime, 1)
+		if exact == True:
+			if (b - a) == c:
+				#print(round(round(currentTime, 2) - round(timeStart, 2), 2))
+				return True
+			else:
+				return False
 		else:
-			return False
+			if (b - a) >= c:
+				return True
+			else:
+				return False
+
 	def counter(timeStart, currentTime, totalDelay):
 		a = round(timeStart, 2)
 		b = round(currentTime, 2)

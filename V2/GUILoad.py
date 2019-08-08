@@ -3,8 +3,9 @@ import time
 from time import sleep
 import globals
 import run
+import keepGoProAlive
 import configLoader
-from GUI2 import Ui_MainWindow
+from GUI import Ui_MainWindow
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -22,12 +23,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.ui.pushController.clicked.connect(self.onStart)
 		self.ui.checkATimerEnable.stateChanged.connect(self.TimerASetting)
 		self.ui.checkBTimerEnable.stateChanged.connect(self.TimerBSetting)
+		self.ui.checkGoProCommands.stateChanged.connect(self.goProSetting)
 		self.ui.StageDelaySpin.valueChanged.connect(self.StageDelaySetting)
 		#self.ui.CheckDelaySpin.valueChanged.connect(self.StageDelaySetting)
 		self.ui.CooldownSpin.valueChanged.connect(self.CooldownDelaySetting)
 		self.ui.PacerBeepsSpin.valueChanged.connect(self.PacerBeepsSetting)
 		self.ui.AStopTime.clicked.connect(self.AStopTime)
 		self.ui.BStopTime.clicked.connect(self.BStopTime)
+		
 		#self.ui.AFalseStart.clicked.connect(self.AFalseStart)
 		#self.ui.BFalseStart.clicked.connect(self.BFalseStart)
 
@@ -52,6 +55,17 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		else:
 			print("Timer B Unchecked")
 			configLoader.TimeBEnabled = False
+
+	def goProSetting(self):
+		if self.ui.checkGoProCommands.isChecked():
+			print("GoPro Checked")
+			globals.goPro = True
+			globals.keepaliverunning = True
+			self.goProKeepAlive()
+		else:
+			print("GoPro UnChecked")
+			globals.goPro = False
+			globals.keepaliverunning = True
 
 	def StageDelaySetting(self, text): #Pre
 		print("Stage Delay Value Changed: " + str(text))
@@ -97,8 +111,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			self.run.bTime.connect(self.bTimeUpdate)
 			self.run.bColour.connect(self.bColourUpdate)
 			self.run.textStatus.connect(self.textStatusUpdate)
+			self.run.goProFail.connect(self.goProFail)
+			self.run.endThreadReset.connect(self.endThreadReset)
 			return self.run.start()
-
 
 		if globals.StartEnabled == False:
 			self.ui.textStatus.setText(_translate("MainWindow", "Aborting..."))
@@ -107,9 +122,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			globals.controlState = -1
 			time.sleep(1)
 			globals.StartEnabled = True
-			self.ui.textStatus.setText(_translate("Mainwindow", "Ready..."))
-			return self.ui.pushController.setText(_translate("MainWindow", "Start"))
+			self.ui.pushController.setText(_translate("MainWindow", "Start"))
+			return self.ui.textStatus.setText(_translate("Mainwindow", "Ready..."))
 	
+	def goProKeepAlive(self):
+		self.keepAlive = keepGoProAlive.Run()
+		return self.keepAlive.start()
+		
 	def aTimeUpdate(self, text):
 		self.ui.TimerATime.setText(_translate("MainWindow", text))
 
@@ -129,7 +148,24 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		if e.key() == QtCore.Qt.Key_Escape:
 			print("Escape!")
 			sys.exit()
+	
+	def goProFail(self):
+		error_dialog = QtWidgets.QMessageBox()
+		error_dialog.setIcon(QtWidgets.QMessageBox.Critical)
+		error_dialog.setText("GoPro connection failed!\nCheck your Wifi Connection")
+		error_dialog.setWindowTitle("Error")
+		error_dialog.exec_()
 
+	def endThreadReset(self):
+		globals.runthreadrunning = False
+		globals.controlState = -1
+		time.sleep(1)
+		globals.StartEnabled = True
+		self.ui.pushController.setText(_translate("MainWindow", "Start"))
+		self.ui.textStatus.setText(_translate("Mainwindow", "Ready..."))
+		
+		globals.timePoint = 0
+		globals.error = False
 
 class MainWindow(ApplicationWindow, QtWidgets.QMainWindow):
 	def __init__(self, parent=None):
