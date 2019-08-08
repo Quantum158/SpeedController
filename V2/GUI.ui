@@ -29,7 +29,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Speed Controller</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="enabled">
@@ -382,7 +382,17 @@ text-decoration: underline;</string>
          <item row="2" column="0">
           <widget class="QCheckBox" name="checkGoProCommands">
            <property name="text">
-            <string>Send Gopro Signals</string>
+            <string>Use GoPro</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="GoProWarningBeeps">
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string>Warning Beeps</string>
            </property>
           </widget>
          </item>

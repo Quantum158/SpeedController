@@ -18,7 +18,7 @@ class timeKeeper:
 				return True
 			else:
 				return False
-		else:
+		if exact == False:
 			if (b - a) >= c:
 				return True
 			else:

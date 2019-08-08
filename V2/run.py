@@ -3,7 +3,6 @@ import configLoader
 from timeKeeper import *
 from goPro import *
 import time
-import datetime
 import sys, os
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 from time import sleep
@@ -25,11 +24,14 @@ class Run(QtCore.QThread):
 	textStatus = pyqtSignal(str)
 	goProFail = pyqtSignal()
 	endThreadReset = pyqtSignal()
+	keepalivethread = pyqtSignal()
 
 	def __init__(self, parent=None):
 		QtCore.QThread.__init__(self, parent)
 	
 	def run(self):
+		globals.keepaliverunning = False #Disable keep alive thread for gopro
+
 		currentBeep = 0
 		if configLoader.PacerBeeps > 0:
 			currentBeep = 1
@@ -95,6 +97,7 @@ class Run(QtCore.QThread):
 		
 		while globals.runthreadrunning == True and globals.controlState > -1:
 			if globals.recording == False and globals.goPro == True: #Start Recording on Camera
+				self.textStatus.emit("Starting Recording")
 				goPro.triggerShutter()
 				sleep(1)
 
@@ -182,5 +185,9 @@ class Run(QtCore.QThread):
 		
 		self.endThreadReset.emit()
 
+		if globals.goPro == True: #Restart Camera, because it likes to turn off after the recording stops
+			sleep(2)
+			goPro.WOL()
+			self.keepalivethread.emit()
 
 		

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\Benja\source\repos\Quantum158\SpeedController\V2\GUI.ui'
+# Form implementation generated from reading ui file 'C:\Users\Benja\Source\Repos\Quantum158\SpeedController\V2\GUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -151,6 +151,10 @@ class Ui_MainWindow(object):
         self.checkGoProCommands = QtWidgets.QCheckBox(self.formLayoutWidget_2)
         self.checkGoProCommands.setObjectName("checkGoProCommands")
         self.formLayout_2.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.checkGoProCommands)
+        self.GoProWarningBeeps = QtWidgets.QCheckBox(self.formLayoutWidget_2)
+        self.GoProWarningBeeps.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.GoProWarningBeeps.setObjectName("GoProWarningBeeps")
+        self.formLayout_2.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.GoProWarningBeeps)
         self.horizontalLayout_3.addWidget(self.widget_3)
         self.BHalf = QtWidgets.QWidget(self.horizontalLayoutWidget)
         self.BHalf.setEnabled(True)
@@ -193,7 +197,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Speed Controller"))
         self.TimerALabel.setText(_translate("MainWindow", "Timer A"))
         self.TimerATime.setText(_translate("MainWindow", "0:00.00"))
         self.AFalseStart.setText(_translate("MainWindow", "False Start\n"
@@ -211,7 +215,8 @@ class Ui_MainWindow(object):
         self.cooldownDelayLabel.setText(_translate("MainWindow", "Cooldown Delay"))
         self.label.setText(_translate("MainWindow", "Pacer Beeps"))
         self.label_2.setText(_translate("MainWindow", "Second(s)"))
-        self.checkGoProCommands.setText(_translate("MainWindow", "Send Gopro Signals"))
+        self.checkGoProCommands.setText(_translate("MainWindow", "Use GoPro"))
+        self.GoProWarningBeeps.setText(_translate("MainWindow", "Warning Beeps"))
         self.TimerBLabel.setText(_translate("MainWindow", "Timer B"))
         self.TimerBTime.setText(_translate("MainWindow", "0:00.00"))
         self.BStopTime.setText(_translate("MainWindow", "Stop Time\n"

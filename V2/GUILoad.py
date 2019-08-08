@@ -113,6 +113,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			self.run.textStatus.connect(self.textStatusUpdate)
 			self.run.goProFail.connect(self.goProFail)
 			self.run.endThreadReset.connect(self.endThreadReset)
+			self.run.keepalivethread.connect(self.goProKeepAlive)
 			return self.run.start()
 
 		if globals.StartEnabled == False:
