@@ -16,5 +16,7 @@ delays = dict(
 
 	Post_Sequence_Cooldown = 3, #In Seconds
 
-	PacerBeeps = 0 #Number of Beeps, 1 per Second
+	PacerBeeps = 0, #Number of Beeps, 1 per Second
+	
+	Auto_Record_Stop = 0, #Number of seconds after recording started where camera should automatically shut off
 	)

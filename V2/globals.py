@@ -35,6 +35,9 @@ def init():
 	global error
 	error = False
 
+	global abort
+	abort = False
+
 	global timeAactive
 	timeAactive = False
 	global timeBactive

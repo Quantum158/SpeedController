@@ -14,4 +14,6 @@ def init():
 	postCooldown = config.delays['Post_Sequence_Cooldown'] #How long the app waits after a sequence has been completed
 	global PacerBeeps
 	PacerBeeps = config.delays['PacerBeeps'] #Pacer Beeps
+	global autoRecordStop
+	autoRecordStop = config.delays['Auto_Record_Stop']
 	print("Config Initialized!")
