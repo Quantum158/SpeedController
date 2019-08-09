@@ -25,18 +25,30 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.ui.checkBTimerEnable.stateChanged.connect(self.TimerBSetting)
 		self.ui.checkGoProCommands.stateChanged.connect(self.goProSetting)
 		self.ui.GoProWarningBeeps.stateChanged.connect(self.goProWarningSetting)
+		self.ui.RecordSpin.valueChanged.connect(self.autoRecordStopSetting)
 		self.ui.StageDelaySpin.valueChanged.connect(self.StageDelaySetting)
-		#self.ui.CheckDelaySpin.valueChanged.connect(self.StageDelaySetting)
-		self.ui.CooldownSpin.valueChanged.connect(self.CooldownDelaySetting)
 		self.ui.PacerBeepsSpin.valueChanged.connect(self.PacerBeepsSetting)
 		self.ui.AStopTime.clicked.connect(self.AStopTime)
 		self.ui.BStopTime.clicked.connect(self.BStopTime)
 		
 		self.ui.GoProWarningBeeps.setEnabled(False)
+		self.ui.RecordSpin.setEnabled(False)
+
+		#Temp because I can't be bothered to do keyboard stuff
+		self.ui.AStopTime.setEnabled(False)
+		self.ui.AStopTime.setText(_translate("MainWindow", "Disabled"))
+		self.ui.BStopTime.setEnabled(False)
+		self.ui.BStopTime.setText(_translate("MainWindow", "Disabled"))
+		self.ui.AFalseStart.setEnabled(False)
+		self.ui.AFalseStart.setText(_translate("MainWindow", "Disabled"))
+		self.ui.BFalseStart.setEnabled(False)
+		self.ui.BFalseStart.setText(_translate("MainWindow", "Disabled"))
+
 		#self.ui.AFalseStart.clicked.connect(self.AFalseStart)
 		#self.ui.BFalseStart.clicked.connect(self.BFalseStart)
 
-		#QtCore.QMetaObject.connectSlotsByName(MainWindow)
+		self.setWindowTitle(_translate("MainWindow", "Speed Controller"))
+		self.setWindowIcon(QtGui.QIcon(__location__ + os.path.sep + "Resources" + os.path.sep + "Icon.jpg"))
 		globals.StartEnabled = True
 
 	def changeButtonText(self, text):
@@ -45,9 +57,47 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 	def changeStatusText(self, text):
 		self.ui.textStatus.setText(_translate("MainWindow", text))
 	
-	def setWindowInfo(self, MainWindow):
-		MainWindow.setWindowTitle(_translate("MainWindow", "Speed Controller"))
-		MainWindow.setWindowIcon(QtGui.QIcon(__location__ + os.path.sep + "Resources" + os.path.sep + "Icon.jpg"))
+	def setPushControllerState(self, state):
+		if state == True:
+			self.ui.pushController.setEnabled(True)
+			self.ui.ControlOutlineTop.setStyleSheet("color: rgb(16, 220, 2);")
+			self.ui.ControlOutlineLeft.setStyleSheet("color: rgb(16, 220, 2);")
+			self.ui.ControlOutlineRight.setStyleSheet("color: rgb(16, 220, 2);")
+			self.ui.ControlOutlineBottom.setStyleSheet("color: rgb(16, 220, 2);")
+		if state == False:
+			self.ui.pushController.setEnabled(False)
+			self.ui.ControlOutlineTop.setStyleSheet("color: rgb(220, 16, 2);")
+			self.ui.ControlOutlineLeft.setStyleSheet("color: rgb(220, 16, 2);")
+			self.ui.ControlOutlineRight.setStyleSheet("color: rgb(220, 16, 2);")
+			self.ui.ControlOutlineBottom.setStyleSheet("color: rgb(220, 16, 2);")
+
+	def setGoProOptionsState(self, state):
+		"""State: 0-All Disabled, 1-Just Main Disabled, 2-All But Main Enabled, 3-All Enabled"""
+		if state == 3: #Enable All GoPro Options
+			self.ui.GoProWarningBeeps.setEnabled(True)
+			self.ui.RecordSpin.setEnabled(True)
+			self.ui.checkGoProCommands.setEnabled(True)
+
+		if state == 2: #Enable All but main, Disable Main
+			self.ui.GoProWarningBeeps.setEnabled(True)
+			self.ui.RecordSpin.setEnabled(True)
+			self.ui.checkGoProCommands.setEnabled(False)
+			
+		if state == 1: #Disable All but main, reset main
+			self.ui.checkGoProCommands.setEnabled(True)
+			self.ui.checkGoProCommands.setChecked(False)
+			self.ui.GoProWarningBeeps.setEnabled(False)
+			self.ui.GoProWarningBeeps.setChecked(False)
+			self.ui.RecordSpin.setEnabled(False)
+			self.ui.RecordSpin.setValue(0)
+
+		if state == 0: #Disable All GoPro Options
+			self.ui.GoProWarningBeeps.setEnabled(False)
+			self.ui.RecordSpin.setEnabled(False)
+			self.ui.GoProWarningBeeps.setChecked(False)
+			self.ui.RecordSpin.setValue(0)
+			self.ui.checkGoProCommands.setEnabled(False)
+			self.ui.checkGoProCommands.setChecked(False)
 
 	def TimerASetting(self):
 		if self.ui.checkATimerEnable.isChecked():
@@ -75,8 +125,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			globals.keepaliverunning = True
 			globals.goProFirstConnect = 1
 			
-			self.ui.pushController.setEnabled(False)
-			self.ui.checkGoProCommands.setEnabled(False)
+			self.setPushControllerState(False)
+			self.setGoProOptionsState(2)
 			self.changeButtonText("Working")
 			self.changeStatusText("Connecting to\nGoPro...")
 			self.ui.GoProWarningBeeps.setEnabled(True)
@@ -90,15 +140,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			print("[Option] GoPro UnChecked")
 			globals.goPro = False
 			globals.keepaliverunning = False
-			self.ui.GoProWarningBeeps.setEnabled(False) #Disable Other GoPro Option
-			self.ui.GoProWarningBeeps.setChecked(False)
+			self.setGoProOptionsState(1)
 			globals.goProWarnings = False
 			globals.goProFirstConnect = 0
 
 	def firstReply(self):
 		globals.goProFirstConnect = 0
-		self.ui.pushController.setEnabled(True)
-		self.ui.checkGoProCommands.setEnabled(True)
+		self.setPushControllerState(True)
+		self.setGoProOptionsState(3)
 		self.changeButtonText("Start")
 		self.changeStatusText("Ready...")
 
@@ -110,20 +159,20 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			print("[Option] Warnings UnChecked")
 			globals.goProWarnings = False
 
+	def autoRecordStopSetting(self, text):
+		print("[Option] Auto Record Stop Value Changed: {}".format(str(text)))
+		configLoader.autoRecordStop = text
+
 	def StageDelaySetting(self, text): #Pre
-		print("[Option] Stage Delay Value Changed: " + str(text))
+		print("[Option] Stage Delay Value Changed: {}".format(str(text)))
 		configLoader.delayStage = text
 
 	def CheckDelaySetting(self, text): #Wait
-		print("[Option] Check Delay Value Changed: " + str(text))
+		print("[Option] Check Delay Value Changed: {}".format(str(text)))
 		configLoader.startCheck = text
 
-	def CooldownDelaySetting(self, text): #Post
-		print("[Option] Cooldown Delay Value Changed: " + str(text))
-		configLoader.postCooldown = text
-
 	def PacerBeepsSetting(self, text): #Pacer Beeps
-		print("[Option] Pacer Beeps Value Changed: " + str(text))
+		print("[Option] Pacer Beeps Value Changed: {}".format(str(text)))
 		configLoader.PacerBeeps = text
 
 	def AStopTime(self):
@@ -147,6 +196,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			def callback():
 				return self.worker.start()
 			globals.StartEnabled = False
+			globals.abort = False
 			globals.error = False
 			self.ui.checkGoProCommands.setEnabled(False)
 			self.ui.textStatus.setText(_translate("MainWindow", "Initializing..."))
@@ -173,16 +223,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 		if globals.StartEnabled == False:	
 			globals.runthreadrunning = False
-
+			globals.abort = True
 			if globals.recording == 0:
 				def callback():
 					self.endThreadReset()
-					self.ui.pushController.setEnabled(True)
 					return
-
+				
 				self.changeStatusText("Aborting...")
 				self.changeButtonText("Working")
-				self.ui.pushController.setEnabled(False)
+				self.setPushControllerState(False)
 				print("Attempting to Stop")
 				
 				timer = QTimer(self)
@@ -203,11 +252,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 						pass #Maybe do something in the future?
 
 					self.endThreadReset()
-					self.ui.pushController.setEnabled(True)
 
 				self.changeStatusText("Stopping\nRecording...")
 				self.changeButtonText("Working")
-				self.ui.pushController.setEnabled(False)
+				self.setPushControllerState(False)
 
 				goPro.stopShutter()
 				timer = QTimer(self)
@@ -257,12 +305,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		ignore_dialog.setText("GoPro will now be disabled to prevent further error messages")
 		ignore_dialog.setWindowTitle("Disabling GoPro")
 		ignore_dialog.exec_()
-		self.ui.checkGoProCommands.setChecked(False)
+		self.setGoProOptionsState(1)
 
 	def endThreadReset(self):
 		def callback():
 			globals.StartEnabled = True
-			self.ui.checkGoProCommands.setEnabled(True)
+			self.setPushControllerState(True)
 			self.changeButtonText("Start")
 			self.changeStatusText("Ready...")
 			
@@ -289,18 +337,18 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 					self.changeStatusText("Ready...")
 					if globals.goProFirstConnect == 1:
 						self.firstReply()
+					print("[Keep Alive] Connection Re-established")
 				else:
 					self.goProFail()
-					self.ui.pushController.setEnabled(True)
-					self.ui.checkGoProCommands.setEnabled(True)
-					self.ui.checkGoProCommands.setChecked(False)
+					self.setPushControllerState(True)
+					self.setGoProOptionsState(1)
 					self.changeButtonText("Start")
 					self.changeStatusText("Ready...")
 				return 
 
 			self.changeStatusText("Attempting to\nwake camera...")
 			self.changeButtonText("Working")
-			self.ui.pushController.setEnabled(False)
+			self.setPushControllerState(False)
 			
 			timer = QTimer(self)
 			timer.timeout.connect(callback)
@@ -308,8 +356,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			timer.start(200)
 		else:
 			self.goProIgnore()
-			self.ui.pushController.setEnabled(True)
-			self.ui.checkGoProCommands.setEnabled(True)
+			self.setPushControllerState(True)
+			self.setGoProOptionsState(1)
 			self.changeButtonText("Start")
 			self.changeStatusText("Ready...")
 		
@@ -320,4 +368,3 @@ class MainWindow(ApplicationWindow, QtWidgets.QMainWindow):
 		QtWidgets.QMainWindow.__init__(self, parent=parent)
 		ApplicationWindow()
 					
-

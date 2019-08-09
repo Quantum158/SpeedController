@@ -20,7 +20,7 @@ class Run(QtCore.QThread):
 		while globals.keepaliverunning == True:
 			if timeKeeper.timeCheck(self.lastRun, 180, time.time(), False) == True:
 				print("[Keep Alive] Pinging Camera")
-				goPro.forceToVideoMode()
+				goPro.keepAlive()
 				self.lastRun = time.time()
 				if goPro.testInternet() == True:
 					if globals.goProFirstConnect == 1:

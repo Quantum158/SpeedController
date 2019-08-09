@@ -56,7 +56,7 @@
       <height>621</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout" name="MainLayout">
      <item>
       <widget class="QWidget" name="AHalf" native="true">
        <property name="styleSheet">
@@ -138,7 +138,10 @@ text-decoration: underline;</string>
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="widget_3" native="true">
+      <widget class="QWidget" name="CentralUnit" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <widget class="QLabel" name="StatusLabel">
         <property name="geometry">
          <rect>
@@ -178,7 +181,7 @@ text-decoration: underline;</string>
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
-       <widget class="Line" name="line">
+       <widget class="Line" name="StatusControlLineSep">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -219,7 +222,7 @@ text-decoration: underline;</string>
          <string>Start</string>
         </property>
        </widget>
-       <widget class="Line" name="line_2">
+       <widget class="Line" name="ControllOptionLineSep">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -254,7 +257,7 @@ text-decoration: underline;</string>
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>320</y>
+          <y>310</y>
           <width>261</width>
           <height>51</height>
          </rect>
@@ -274,119 +277,65 @@ text-decoration: underline;</string>
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>380</y>
+          <y>370</y>
           <width>261</width>
-          <height>218</height>
+          <height>211</height>
          </rect>
         </property>
-        <layout class="QFormLayout" name="formLayout_2">
-         <item row="0" column="0">
+        <layout class="QFormLayout" name="OptionsLayout">
+         <item row="1" column="0">
           <widget class="QCheckBox" name="checkATimerEnable">
            <property name="text">
             <string>Timer A Enabled</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
+         <item row="1" column="1">
           <widget class="QCheckBox" name="checkBTimerEnable">
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
            <property name="text">
             <string>Timer B Enabled</string>
            </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="delayAfterStagingLabel">
-           <property name="text">
-            <string>Delay After Staging</string>
+           <property name="iconSize">
+            <size>
+             <width>16</width>
+             <height>16</height>
+            </size>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
-          <widget class="QSpinBox" name="StageDelaySpin"/>
-         </item>
-         <item row="4" column="0" colspan="2">
-          <widget class="Line" name="line_3">
+         <item row="2" column="0" colspan="2">
+          <widget class="Line" name="OptionsTopLine">
            <property name="minimumSize">
             <size>
              <width>15</width>
              <height>15</height>
             </size>
            </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
            <property name="lineWidth">
-            <number>100</number>
+            <number>2</number>
+           </property>
+           <property name="midLineWidth">
+            <number>0</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="checkDelayLabel">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Start Check Delay</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QSpinBox" name="CheckDelaySpin">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="cooldownDelayLabel">
-           <property name="text">
-            <string>Cooldown Delay</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QSpinBox" name="CooldownSpin"/>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Pacer Beeps</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QSpinBox" name="PacerBeepsSpin">
-             <property name="keyboardTracking">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Second(s)</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="8" column="0">
-          <widget class="Line" name="line_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QCheckBox" name="checkGoProCommands">
            <property name="text">
             <string>Use GoPro</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
+         <item row="3" column="1">
           <widget class="QCheckBox" name="GoProWarningBeeps">
            <property name="layoutDirection">
             <enum>Qt::LeftToRight</enum>
@@ -396,8 +345,232 @@ text-decoration: underline;</string>
            </property>
           </widget>
          </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="RecordStopLabel">
+           <property name="text">
+            <string>Automatic Record Stop</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <layout class="QHBoxLayout" name="RecordLayout">
+           <item>
+            <widget class="QSpinBox" name="RecordSpin">
+             <property name="keyboardTracking">
+              <bool>true</bool>
+             </property>
+             <property name="displayIntegerBase">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="RecordSecondsLabel">
+             <property name="text">
+              <string>Second(s)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="0" colspan="2">
+          <widget class="Line" name="OptionsMiddleLine">
+           <property name="minimumSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>2</number>
+           </property>
+           <property name="midLineWidth">
+            <number>0</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="delayAfterStagingLabel">
+           <property name="text">
+            <string>Delay After Staging</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <layout class="QHBoxLayout" name="StageDelayLayout">
+           <item>
+            <widget class="QSpinBox" name="StageDelaySpin">
+             <property name="suffix">
+              <string/>
+             </property>
+             <property name="prefix">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="DelaySecondsLabel">
+             <property name="text">
+              <string>Second(s)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="7" column="0" colspan="2">
+          <widget class="Line" name="OptionsBottomLine">
+           <property name="minimumSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>2</number>
+           </property>
+           <property name="midLineWidth">
+            <number>0</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="PacerLabel">
+           <property name="text">
+            <string>Pacer Beeps</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <layout class="QHBoxLayout" name="PacerLayout">
+           <item>
+            <widget class="QSpinBox" name="PacerBeepsSpin">
+             <property name="keyboardTracking">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="PacerSecondsLabel">
+             <property name="text">
+              <string>Second(s)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
         </layout>
        </widget>
+       <widget class="Line" name="ControlOutlineBottom">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>240</y>
+          <width>201</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(16, 220, 2);</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+       <widget class="Line" name="ControlOutlineTop">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>180</y>
+          <width>201</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(16, 220, 2);</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+       <widget class="Line" name="ControlOutlineRight">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>190</y>
+          <width>21</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(16, 220, 2);</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+       <widget class="Line" name="ControlOutlineLeft">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>190</y>
+          <width>21</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(16, 220, 2);</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+       <zorder>pushController</zorder>
+       <zorder>StatusLabel</zorder>
+       <zorder>textStatus</zorder>
+       <zorder>StatusControlLineSep</zorder>
+       <zorder>ControllOptionLineSep</zorder>
+       <zorder>OptionsLabel</zorder>
+       <zorder>formLayoutWidget_2</zorder>
+       <zorder>ControlOutlineBottom</zorder>
+       <zorder>ControlOutlineTop</zorder>
+       <zorder>ControlOutlineRight</zorder>
+       <zorder>ControlOutlineLeft</zorder>
       </widget>
      </item>
      <item>
@@ -502,16 +675,6 @@ text-decoration: underline;</string>
     </layout>
    </widget>
   </widget>
-  <action name="actionOptions">
-   <property name="text">
-    <string>Options</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections/>

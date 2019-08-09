@@ -16,6 +16,13 @@ HighTone = mixer.Sound(os.path.join(__location__, "Resources", "Sounds" , "HighT
 FalseStart = mixer.Sound(os.path.join(__location__, "Resources", "Sounds" , "FalseStart.ogg"))
 PacerTone = mixer.Sound(os.path.join(__location__, "Resources", "Sounds" , "PacerTone.ogg"))
 
+def isNotBoolean(value):
+	"""Returns a boolean if the inputted value is not a boolean (I promise this is useful)"""
+	if str(value) == str(False) or str(value) == str(True):
+		return False
+	else:
+		return True
+
 class Run(QThread):
 	aTime = pyqtSignal(str)
 	aColour = pyqtSignal(str)
@@ -33,9 +40,9 @@ class Run(QThread):
 	def run(self):
 		globals.keepaliverunning = False #Disable keep alive thread for gopro
 
-		currentBeep = 0
+		pacerCurrent = False
 		if configLoader.PacerBeeps > 0:
-			currentBeep = 1
+			pacerCurrent = 1
 		globals.controlState = 0
 		globals.runthreadrunning = True
 
@@ -153,13 +160,15 @@ class Run(QThread):
 					if globals.timeBactive == True:
 						self.bColour.emit(str((16,220,2)))
 					
-				if currentBeep > 0 and currentBeep <= configLoader.PacerBeeps:
-					if timeKeeper.timeCheck(globals.timePoint, currentBeep, time.time()) == True:
-						if currentBeep == configLoader.PacerBeeps:
+				if isNotBoolean(pacerCurrent) == True and pacerCurrent <= configLoader.PacerBeeps:
+					#isNotBoolean because false means no pacers enabled and true means pacers finished
+					if timeKeeper.timeCheck(globals.timePoint, pacerCurrent, time.time()) == True:
+						if pacerCurrent == configLoader.PacerBeeps:
+							pacerCurrent = True
 							FalseStart.play()
 						else:
 							PacerTone.play()
-						currentBeep += 1
+						pacerCurrent += 1
 				#if InputCheck.getLeftShiftPressed() == True and globals.timeAactive == True:
 				#	globals.timeAactive = False
 				#	FalseStart.play()
@@ -174,9 +183,10 @@ class Run(QThread):
 
 				if globals.timeAactive == False and globals.timeBactive == False:
 					self.textStatus.emit("Both Timers\nStopped!")
-					globals.controlState = 2
+					if isNotBoolean(pacerCurrent) == False:
+						globals.controlState = 2
 				
-			if globals.controlState == 2: #Timers Stopped
+			if globals.controlState == 2: #All functions stopped (pacers, timers)
 				globals.runthreadrunning = False
 			
 			sleep(0.016)
@@ -185,6 +195,10 @@ class Run(QThread):
 		if globals.error == False:
 			if globals.goPro == True:
 				goPro.disableLocate()
+
+			if globals.abort == False:
+				if globals.goPro == False:
+					self.endThreadReset.emit()
 			
 		else:
 			self.aColour.emit(str((220,16,2)))

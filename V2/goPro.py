@@ -2,8 +2,21 @@ import urllib.request
 from wakeonlan import send_magic_packet
 import globals
 from time import sleep
+import socket
+import sys
 
 class goPro:
+
+    #For keepAlive
+    def get_command_msg(id):
+        return "_GPHD_:%u:%u:%d:%1lf\n" % (0, 0, 2, 0)
+    HOME_IP = "10.5.5.9"
+    HOME_PORT = 8554
+    KEEP_ALIVE_CMD = 2
+    MESSAGE = get_command_msg(2)
+    if sys.version_info.major >= 3:
+        MESSAGE = bytes(MESSAGE, "utf-8")
+    
     checkUrl = 'http://10.5.5.9/gp/gpControl/status'
     def cameraCheck():
         if goPro.testInternet() == True:
@@ -86,3 +99,8 @@ class goPro:
         except Exception:
             print("Stop Shutter Error")
             globals.error = True
+
+    def keepAlive():
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(goPro.MESSAGE, (goPro.HOME_IP, goPro.HOME_PORT))
+
