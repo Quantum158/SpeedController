@@ -99,6 +99,25 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			self.ui.checkGoProCommands.setEnabled(False)
 			self.ui.checkGoProCommands.setChecked(False)
 
+	def setOptionsState(self, state):
+		if state == True: #Enable All (Selectively With GoPro)
+			self.ui.checkATimerEnable.setEnabled(True)
+			self.ui.checkBTimerEnable.setEnabled(True)
+			self.ui.StageDelaySpin.setEnabled(True)
+			self.ui.PacerBeepsSpin.setEnabled(True)
+			self.ui.checkGoProCommands.setEnabled(True)
+			if self.ui.checkGoProCommands.isChecked() == True:
+				self.ui.RecordSpin.setEnabled(True)
+				self.ui.GoProWarningBeeps.setEnabled(True)
+		if state == False: #Disble All
+			self.ui.checkATimerEnable.setEnabled(False)
+			self.ui.checkBTimerEnable.setEnabled(False)
+			self.ui.checkGoProCommands.setEnabled(False)
+			self.ui.GoProWarningBeeps.setEnabled(False)
+			self.ui.RecordSpin.setEnabled(False)
+			self.ui.StageDelaySpin.setEnabled(False)
+			self.ui.PacerBeepsSpin.setEnabled(False)
+
 	def TimerASetting(self):
 		if self.ui.checkATimerEnable.isChecked():
 			print("[Option] Timer A Checked")
@@ -198,11 +217,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			globals.StartEnabled = False
 			globals.abort = False
 			globals.error = False
-			self.ui.checkGoProCommands.setEnabled(False)
-			self.ui.textStatus.setText(_translate("MainWindow", "Initializing..."))
-			self.ui.pushController.setText(_translate("MainWindow", "Abort"))
-			print("Running")
-
+			self.setOptionsState(False)
+			self.changeStatusText("Initializing")
+			self.changeButtonText("Abort")
 
 			self.worker = run.Run()
 			self.worker.aTime.connect(self.aTimeUpdate)
@@ -214,6 +231,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			self.worker.goProFail.connect(self.goProFail)
 			self.worker.endThreadReset.connect(self.endThreadReset)
 			self.worker.keepalivethread.connect(self.goProKeepAlive)
+			self.worker.autoRecordStop.connect(self.autoRecordStop)
 
 			timer = QTimer(self)
 			timer.timeout.connect(callback)
@@ -224,7 +242,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		if globals.StartEnabled == False:	
 			globals.runthreadrunning = False
 			globals.abort = True
-			if globals.recording == 0:
+			if globals.recording == False:
 				def callback():
 					self.endThreadReset()
 					return
@@ -240,7 +258,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 				timer.start(200)	
 				return
 
-			if globals.recording == 1:
+			if globals.recording == True:
 				def callback():
 					self.changeStatusText("Restarting\nCamera...")
 					if goPro.cameraCheck() == True:
@@ -263,7 +281,31 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 				timer.setSingleShot(True)
 				timer.start(5000)		
 				return			
-		
+	
+	def autoRecordStop(self):
+		def callback():
+			self.changeStatusText("Restarting\nCamera...")
+			if goPro.cameraCheck() == True:
+				goPro.forceToVideoMode()
+				self.endThreadReset()
+				globals.keepaliverunning = True
+				self.goProKeepAlive()
+			else:
+				pass #Maybe do something in the future?
+
+			self.endThreadReset()
+
+		self.changeStatusText("Stopping\nRecording...")
+		self.changeButtonText("Working")
+		self.setPushControllerState(False)
+
+		goPro.stopShutter()
+		timer = QTimer(self)
+		timer.timeout.connect(callback)
+		timer.setSingleShot(True)
+		timer.start(5000)		
+		return			
+	
 	def aTimeUpdate(self, text):
 		self.ui.TimerATime.setText(_translate("MainWindow", text))
 
@@ -311,6 +353,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		def callback():
 			globals.StartEnabled = True
 			self.setPushControllerState(True)
+			self.setOptionsState(True)
 			self.changeButtonText("Start")
 			self.changeStatusText("Ready...")
 			
@@ -331,14 +374,16 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		if buttonReply == QtWidgets.QMessageBox.Yes:
 			def callback():
 				if goPro.WOL() == True:
+					print("[Keep Alive] Connection Re-established")
 					self.goProRecover()
-					self.ui.pushController.setEnabled(True)
+					self.setPushControllerState(True)
 					self.changeButtonText("Start")
 					self.changeStatusText("Ready...")
 					if globals.goProFirstConnect == 1:
 						self.firstReply()
-					print("[Keep Alive] Connection Re-established")
+					keepGoProAlive.Run.loopHold = False
 				else:
+					keepGoProAlive.Run.loopHold = False
 					self.goProFail()
 					self.setPushControllerState(True)
 					self.setGoProOptionsState(1)
@@ -346,6 +391,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 					self.changeStatusText("Ready...")
 				return 
 
+			print("[Keep Alive] Sending WOL command")
 			self.changeStatusText("Attempting to\nwake camera...")
 			self.changeButtonText("Working")
 			self.setPushControllerState(False)
@@ -355,6 +401,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			timer.setSingleShot(True)
 			timer.start(200)
 		else:
+			keepGoProAlive.Run.loopHold = False
 			self.goProIgnore()
 			self.setPushControllerState(True)
 			self.setGoProOptionsState(1)

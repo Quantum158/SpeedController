@@ -221,6 +221,21 @@ text-decoration: underline;</string>
         <property name="text">
          <string>Start</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
        </widget>
        <widget class="Line" name="ControllOptionLineSep">
         <property name="geometry">
@@ -356,8 +371,14 @@ text-decoration: underline;</string>
           <layout class="QHBoxLayout" name="RecordLayout">
            <item>
             <widget class="QSpinBox" name="RecordSpin">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera will automatically stop recording after said time&lt;/p&gt;&lt;p&gt;`0` means this is disabled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="keyboardTracking">
               <bool>true</bool>
+             </property>
+             <property name="suffix">
+              <string>   Second(s)</string>
              </property>
              <property name="displayIntegerBase">
               <number>10</number>
@@ -365,11 +386,17 @@ text-decoration: underline;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="RecordSecondsLabel">
-             <property name="text">
-              <string>Second(s)</string>
+            <spacer name="SpacerRecord">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
-            </widget>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </item>
@@ -406,8 +433,11 @@ text-decoration: underline;</string>
           <layout class="QHBoxLayout" name="StageDelayLayout">
            <item>
             <widget class="QSpinBox" name="StageDelaySpin">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;System will wait said time after start is pressed before playing the start tones&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="suffix">
-              <string/>
+              <string>   Second(s)</string>
              </property>
              <property name="prefix">
               <string/>
@@ -415,11 +445,17 @@ text-decoration: underline;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="DelaySecondsLabel">
-             <property name="text">
-              <string>Second(s)</string>
+            <spacer name="SpacerStageDelay">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
-            </widget>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </item>
@@ -456,17 +492,29 @@ text-decoration: underline;</string>
           <layout class="QHBoxLayout" name="PacerLayout">
            <item>
             <widget class="QSpinBox" name="PacerBeepsSpin">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;lt;SOMEONE NEEDS TO HELP ME DESCRIBE THIS&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="keyboardTracking">
               <bool>true</bool>
+             </property>
+             <property name="suffix">
+              <string>   Second(s)</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="PacerSecondsLabel">
-             <property name="text">
-              <string>Second(s)</string>
+            <spacer name="SpacerPacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
-            </widget>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </item>
@@ -521,7 +569,7 @@ text-decoration: underline;</string>
          <rect>
           <x>220</x>
           <y>190</y>
-          <width>21</width>
+          <width>20</width>
           <height>61</height>
          </rect>
         </property>
@@ -560,7 +608,6 @@ text-decoration: underline;</string>
          <enum>Qt::Vertical</enum>
         </property>
        </widget>
-       <zorder>pushController</zorder>
        <zorder>StatusLabel</zorder>
        <zorder>textStatus</zorder>
        <zorder>StatusControlLineSep</zorder>
@@ -571,6 +618,7 @@ text-decoration: underline;</string>
        <zorder>ControlOutlineTop</zorder>
        <zorder>ControlOutlineRight</zorder>
        <zorder>ControlOutlineLeft</zorder>
+       <zorder>pushController</zorder>
       </widget>
      </item>
      <item>

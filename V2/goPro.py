@@ -4,6 +4,7 @@ import globals
 from time import sleep
 import socket
 import sys
+import json
 
 class goPro:
 
@@ -22,7 +23,6 @@ class goPro:
         if goPro.testInternet() == True:
             return True
         else:
-            print("WOL")
             if goPro.WOL() == True:
                 if goPro.testInternet() == True:
                     return True
@@ -34,6 +34,11 @@ class goPro:
         while True:
             try: 
                 urllib.request.urlopen(goPro.checkUrl, None, 1)
+                #res = urllib.request.urlopen(goPro.checkUrl, None, 1)
+                #data = res.read()
+                #encoding = res.info().get_content_charset("utf-8")
+                #json_data = json.loads(data.decode(encoding))
+                #print(json_data)
                 return True
             except Exception:
                 pass
@@ -86,21 +91,31 @@ class goPro:
 
     def triggerShutter():
         try:
-            urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=1')
-            globals.recording = 1
+            if globals.recording == True:
+                print("[WARN] Trigger Shutter command recieved but camera is already recording! Ignored")
+            else:
+                urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=1')
+                globals.recording = True
         except Exception:
             print("Trigger Shutter Error")
             globals.error = True
 
     def stopShutter():
         try:
-            urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=0')
-            globals.recording = 0
+            if globals.recording == False:
+                print("[WARN] Stop Shutter command recieved but camera is not recording! Ignored")
+            else:
+                urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=0')
+                globals.recording = False
         except Exception:
             print("Stop Shutter Error")
             globals.error = True
 
     def keepAlive():
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(goPro.MESSAGE, (goPro.HOME_IP, goPro.HOME_PORT))
+        try:
+            sock.sendto(goPro.MESSAGE, (goPro.HOME_IP, goPro.HOME_PORT))
+        except Exception:
+            print("Keep Alive Error")
+            globals.error = True
 
