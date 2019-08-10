@@ -35,10 +35,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.ui.RecordSpin.setEnabled(False)
 
 		#Temp because I can't be bothered to do keyboard stuff
-		self.ui.AStopTime.setEnabled(False)
-		self.ui.AStopTime.setText(_translate("MainWindow", "Disabled"))
-		self.ui.BStopTime.setEnabled(False)
-		self.ui.BStopTime.setText(_translate("MainWindow", "Disabled"))
+		#self.ui.AStopTime.setEnabled(False)
+		#self.ui.AStopTime.setText(_translate("MainWindow", "Disabled"))
+		#self.ui.BStopTime.setEnabled(False)
+		#self.ui.BStopTime.setText(_translate("MainWindow", "Disabled"))
 		self.ui.AFalseStart.setEnabled(False)
 		self.ui.AFalseStart.setText(_translate("MainWindow", "Disabled"))
 		self.ui.BFalseStart.setEnabled(False)

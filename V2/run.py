@@ -73,23 +73,7 @@ def timerDisplayReset(runClass):
 	else:
 		runClass.bColour.emit(str((255,255,255)))
 		runClass.bTime.emit("Offline")
-
-def cameraStartRecording(runClass):
-	def callback():
-		goPro.triggerShutter()
-		self.buttonText.emit("Stop Record")
-
-	if globals.recording == False and globals.goPro == True: #Start Recording on Camera
-		self.textStatus.emit("Starting Recording")
-		
-		timer = QTimer(self)
-		timer.timeout.connect(callback)
-		timer.setSingleShot(True)
-		timer.start(200)
-
-	else:
-		print("[RUN] [WARN] Attempted to start recording but camera reports it already is!")	
-
+	sleep(1)
 
 class Run(QThread):
 	aTime = pyqtSignal(str)
@@ -120,8 +104,7 @@ class Run(QThread):
 		if globals.goPro == True:
 			goProCheckConnection(self)
 
-		timerDisplayReset()
-		sleep(1)
+		timerDisplayReset(self)
 
 		if int(configLoader.delayStage) > 0:
 			globals.controlState = -1 #Hold start
@@ -142,8 +125,18 @@ class Run(QThread):
 					sleep(0.01)
 					self.textStatus.emit("Starting in\n" + str(timeKeeper.counter(globals.timePoint, time.time(), int(configLoader.delayStage))))
 				
-		
-		cameraStartRecording()
+
+				
+		if globals.recording == False and globals.goPro == True: #Start Recording on Camera
+			self.textStatus.emit("Starting Recording")
+			sleep(0.25)
+			goPro.triggerShutter()
+			globals.recording = True
+			self.buttonText.emit("Stop Record")		
+			sleep(0.25)
+				
+		else:
+			print("[RUN] [WARN] Attempted to start recording but camera reports it already is!")	
 
 		#Setup for tone countdown
 		playState = 0
@@ -223,8 +216,8 @@ class Run(QThread):
 			if globals.controlState == 2: #Functions stopped (pacers, timers)				
 				globals.runthreadrunning = False
 			
-
-			if configLoader.autoRecordStop > 0 and stopThreadholdPassed == False and globals.controlState < 2: # >0 means the user wants the camera to stop automatically
+			if configLoader.autoRecordStop > 0 and stopThreadholdPassed == False and globals.controlState < 2: # autoRecordStop > 0 means the user wants the camera to stop automatically
+				print(timeKeeper.timeCheck(globals.timePoint, int(configLoader.autoRecordStop), time.time()))
 				if timeKeeper.timeCheck(globals.timePoint, int(configLoader.autoRecordStop), time.time()) == True:
 					if globals.recording == True:
 						stopThreadholdPassed = True
