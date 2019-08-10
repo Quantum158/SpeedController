@@ -5,7 +5,7 @@ A python application to replace the functionality of the Speed Controller Box at
 This is the first executable release, as such, it is currently <b>ONLY</b> supported for windows
 
 To Run:
-1. Instal the .zip below
+1. Download the .zip
 2. Extract the .zip to any location
 3. Open the folder and run `SpeedController.exe`
 
