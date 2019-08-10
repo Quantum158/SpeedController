@@ -1,0 +1,8 @@
+update ui: 
+python -m PyQt5.uic.pyuic -x C:\Users\Benja\Source\Repos\Quantum158\SpeedController\modules\GUI.ui -o C:\Users\Benja\Source\Repos\Quantum158\SpeedController\modules\GUI.py
+
+log ui: 
+python -m PyQt5.uic.pyuic -x C:\Users\Benja\Source\Repos\Quantum158\SpeedController\modules\LogGUI.ui -o C:\Users\Benja\Source\Repos\Quantum158\SpeedController\modules\LogGUI.py
+
+build exe: 
+auto-py-to-exe

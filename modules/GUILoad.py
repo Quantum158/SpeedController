@@ -1,28 +1,32 @@
+import os
+import sys
 from time import sleep
+
+import modules.LogGUI
+import modules.configLoader
 import modules.globals
+import modules.GUI
+import modules.keepGoProAlive
+import modules.run
+from modules.goPro import goPro
+from PyQt5 import Qt, QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QThread, QTimer, pyqtSignal
+
 globals = modules.globals
 
-import modules.run
 run = modules.run
-import modules.keepGoProAlive
 keepGoProAlive = modules.keepGoProAlive
-from modules.goPro import goPro
-import modules.configLoader
 configLoader = modules.configLoader
-from modules.GUI import Ui_MainWindow
 
-import sys, os
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtCore import pyqtSignal, QTimer, QThread
 
 _translate = QtCore.QCoreApplication.translate
 class ApplicationWindow(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(ApplicationWindow, self).__init__()
 
-		self.ui = Ui_MainWindow()
+		self.ui = modules.GUI.Ui_MainWindow()
 		self.ui.setupUi(self)
 
 		self.ui.pushController.clicked.connect(self.onStart)
@@ -35,7 +39,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.ui.PacerBeepsSpin.valueChanged.connect(self.PacerBeepsSetting)
 		self.ui.AStopTime.clicked.connect(self.AStopTime)
 		self.ui.BStopTime.clicked.connect(self.BStopTime)
-		
+		self.ui.OpenLogPush.clicked.connect(self.openLogWindow)
+
 		self.ui.GoProWarningBeeps.setEnabled(False)
 		self.ui.RecordSpin.setEnabled(False)
 
@@ -55,7 +60,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		#self.ui.BFalseStart.clicked.connect(self.BFalseStart)
 
 		self.setWindowTitle(_translate("MainWindow", "Speed Controller"))
-		self.setWindowIcon(QtGui.QIcon(__location__ + os.path.sep + "Resources" + os.path.sep + "Icon.jpg"))
+		self.setWindowIcon(QtGui.QIcon(os.path.join(__location__, "Resources", "Icon2.jpg")))
 		globals.StartEnabled = True
 
 	def changeButtonText(self, text):
@@ -127,17 +132,21 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 	def TimerASetting(self):
 		if self.ui.checkATimerEnable.isChecked():
+			self.addToLogWindow("[Option] Timer A Checked", 'purple')
 			print("[Option] Timer A Checked")
 			configLoader.TimeAEnabled = True
 		else:
+			self.addToLogWindow("[Option] Timer A Unchecked", 'purple')
 			print("[Option] Timer A Unchecked")
 			configLoader.TimeAEnabled = False
 
 	def TimerBSetting(self):
 		if self.ui.checkBTimerEnable.isChecked():
+			self.addToLogWindow("[Option] Timer B Checked", 'purple')
 			print("[Option] Timer B Checked")
 			configLoader.TimeBEnabled = True
 		else:
+			self.addToLogWindow("[Option] Timer B Unchecked", 'purple')
 			print("[Option] Timer B Unchecked")
 			configLoader.TimeBEnabled = False
 
@@ -147,6 +156,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 				self.goProKeepAlive()
 			
 			print("[Option] GoPro Checked")
+			self.addToLogWindow("[Option] GoPro Checked", 'purple')
 			globals.goPro = True
 			globals.keepaliverunning = True
 			globals.goProFirstConnect = 1
@@ -164,7 +174,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 		else:
 			print("[Option] GoPro UnChecked")
+			self.addToLogWindow("[Option] GoPro UnChecked", 'purple')
 			globals.goPro = False
+			self.addToLogWindow("[MAIN] Keep Alive Thread Termination Cued", 'orange')
 			globals.keepaliverunning = False
 			self.setGoProOptionsState(1)
 			globals.goProWarnings = False
@@ -179,10 +191,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 	def goProWarningSetting(self):
 		if self.ui.GoProWarningBeeps.isChecked():
-			print("[Option] Warnings Checked")
+			print("[Option] Camera Warnings Checked")
+			self.addToLogWindow("[Option] Camera Warnings Checked", 'purple')
 			globals.goProWarnings = True
 		else:
 			print("[Option] Warnings UnChecked")
+			self.addToLogWindow("[Option] Camera Warnings Unchecked", 'purple')
 			globals.goProWarnings = False
 
 	def autoRecordStopSetting(self, value):
@@ -191,6 +205,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		else:
 			self.ui.RecordSpin.setSuffix("   Seconds")
 		print("[Option] Auto Record Stop Value Changed: {}".format(str(value)))
+		self.addToLogWindow("[Option] Auto Record Stop Value Changed{}".format(str(value)), 'purple')
 		configLoader.autoRecordStop = value
 
 	def StageDelaySetting(self, value): #Pre
@@ -199,6 +214,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		else:
 			self.ui.StageDelaySpin.setSuffix("   Seconds")
 		print("[Option] Stage Delay Value Changed: {}".format(str(value)))
+		self.addToLogWindow("[Option] Stage Delay Value Changed{}".format(str(value)), 'purple')
 		configLoader.delayStage = value
 
 	def PacerBeepsSetting(self, value): #Pacer Beeps
@@ -207,6 +223,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		else:
 			self.ui.PacerBeepsSpin.setSuffix("   Seconds")
 		print("[Option] Pacer Beeps Value Changed: {}".format(str(value)))
+		self.addToLogWindow("[Option] Pacer Beeps Value Changed{}".format(str(value)), 'purple')
 		configLoader.PacerBeeps = value
 
 	def AStopTime(self):
@@ -229,6 +246,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		if globals.StartEnabled == True:
 			def callback():
 				return self.worker.start()
+			
+			print("[MAIN] Keep Alive Thread Termination Cued")
+			self.addToLogWindow("[MAIN] Keep Alive Thread Termination Cued", 'orange')
+			globals.keepaliverunning = False #Disable keep alive thread for gopro
 			globals.StartEnabled = False
 			globals.abort = False
 			globals.error = False
@@ -247,7 +268,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			self.worker.endThreadReset.connect(self.endThreadReset)
 			self.worker.keepalivethread.connect(self.goProKeepAlive)
 			self.worker.autoRecordStop.connect(self.autoRecordStop)
+			self.worker.addToLogWindow.connect(self.addToLogWindow)
 
+			self.addToLogWindow("[MAIN] Booting Run Thread", 'green')
 			timer = QTimer(self)
 			timer.timeout.connect(callback)
 			timer.setSingleShot(True)
@@ -256,6 +279,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 		if globals.StartEnabled == False:	
 			print("[MAIN] Run Thread Termination Cued")
+			self.addToLogWindow("[MAIN] Run Thread Termination Cued", 'orange')
 			globals.runthreadrunning = False
 			globals.abort = True
 			if globals.recording == False:
@@ -287,6 +311,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 					self.endThreadReset()
 
+				self.addToLogWindow("[MAIN] Stopping Recording ", 'orange')
 				self.changeStatusText("Stopping\nRecording...")
 				self.changeButtonText("Working")
 				self.setPushControllerState(False)
@@ -312,6 +337,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 			self.endThreadReset()
 
+		self.addToLogWindow("[MAIN] Stopping Recording ", 'orange')
 		self.changeStatusText("Stopping\nRecording...")
 		self.changeButtonText("Working")
 		self.setPushControllerState(False)
@@ -344,6 +370,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.keepAlive = keepGoProAlive.Run()
 		self.keepAlive.sendWOL.connect(self.WOLdialog)
 		self.keepAlive.firstReply.connect(self.firstReply)
+		self.keepAlive.toLog.connect(self.addToLogWindow)
 		return self.keepAlive.start()
 
 	def goProFail(self):
@@ -394,7 +421,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		if buttonReply == QtWidgets.QMessageBox.Yes:
 			def callback():
 				if goPro.WOL() == True:
-					print("[Keep Alive] Connection Re-established")
+					self.addToLogWindow("[KEEP ALIVE] Connection Established", 'green')
+					print("[KEEP ALIVE] Connection Established")
 					self.goProRecover()
 					self.setPushControllerState(True)
 					self.changeButtonText("Start")
@@ -403,6 +431,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 						self.firstReply()
 					keepGoProAlive.Run.loopHold = False
 				else:
+					print("KEEP ALIVE] Connection Failed")
+					self.addToLogWindow("[KEEP ALIVE] Connection Failed", 'red')
 					keepGoProAlive.Run.loopHold = False
 					self.goProFail()
 					self.setPushControllerState(True)
@@ -411,7 +441,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 					self.changeStatusText("Ready...")
 				return 
 
-			print("[Keep Alive] Sending WOL command")
+			self.addToLogWindow("[KEEP ALIVE] Sending WOL command", 'orange')
+			print("[KEEP ALIVE] Sending WOL command")
 			self.changeStatusText("Attempting to\nwake camera...")
 			self.changeButtonText("Working")
 			self.setPushControllerState(False)
@@ -427,11 +458,67 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			self.setGoProOptionsState(1)
 			self.changeButtonText("Start")
 			self.changeStatusText("Ready...")
+
+
+	def openLogWindow(self):
+		if globals.logOpen == False:
+			globals.logOpen = True
+			self.logWindow = LogWindow()
+			self.logWindow.show()
+
+	def addToLogWindow(self, text, colour = None):
+		if globals.logOpen == True:
+			if colour == None:
+				addItemToLogList(self.logWindow, text)
+			else:
+				addItemToLogList(self.logWindow, text, colour)
 		
+		else:
+			pass #Don't add to log ui as it isn't open
 
+	def closeEvent(self, event):
+		if globals.logOpen == True:
+			self.logWindow.close()
+			
+		event.accept()
 
-class MainWindow(ApplicationWindow, QtWidgets.QMainWindow):
+#Log Window Specific
+
+def addItemToLogList(LogWindowClass, text, colour = None):
+	newItem = QtWidgets.QListWidgetItem()
+	newItem.setText(text)
+	if colour != None:
+		colours = dict(
+			green = '#11dc02', 
+			blue = '#0059ff', 
+			lightblue = '#00aaff', 
+			orange = '#ffbf00', 
+			red = '#dc1102',
+			purple = '#a600a3'
+		)
+		if colour in colours.keys():
+			colour = colours[colour]
+		else:
+			colour = "#ffffff"
+		brush = QtGui.QBrush(QtGui.QColor(colour))
+		brush.setStyle(QtCore.Qt.SolidPattern)
+		newItem.setBackground(brush)
+
+	LogWindowClass.ui.LogList.addItem(newItem)
+
+class LogWindow(QtWidgets.QMainWindow):  # Class for Log Window
 	def __init__(self, parent=None):
 		QtWidgets.QMainWindow.__init__(self, parent=parent)
-		ApplicationWindow()
-					
+		self.ui = modules.LogGUI.Ui_MainWindow()
+		self.ui.setupUi(self)
+
+		self.setWindowTitle(_translate("MainWindow", "Speed Controller Log"))
+		self.setWindowIcon(QtGui.QIcon(os.path.join(__location__, "Resources", "Icon2.jpg")))
+
+		self.ui.LogList.setStyleSheet("font: 14pt \"MS Shell Dlg 2\";\n")
+		#addItemToLogList(self, "Beginning of Log")
+
+	def closeEvent(self, event):
+		event.accept()
+		globals.logOpen = False
+

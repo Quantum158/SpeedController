@@ -105,14 +105,15 @@ class Run(QThread):
 	endThreadReset = pyqtSignal()
 	keepalivethread = pyqtSignal()
 	autoRecordStop = pyqtSignal()
+	addToLogWindow = pyqtSignal(str, str)
 
 	def __init__(self, parent=None):
 		QtCore.QThread.__init__(self, parent)
 		
 	def run(self):
 		print("[RUN] Thread Initiated")
+		self.addToLogWindow.emit("[RUN] Thread Initiated", 'green')
 		stopThreadholdPassed = False
-		globals.keepaliverunning = False #Disable keep alive thread for gopro
 
 		pacerCurrent = False
 		if configLoader.PacerBeeps > 0:
@@ -170,16 +171,19 @@ class Run(QThread):
 					playState = 1 
 					LowTone.play()
 					print("[RUN] Tone 1")
+					self.addToLogWindow.emit("[RUN] Tone 1", 'blue')
 			
 				if timeKeeper.timeCheck(globals.timePoint, 2.00, time.time()) == True and playState == 1:
 					playState = 2 
 					LowTone.play()
 					print("[RUN] Tone 2")
+					self.addToLogWindow.emit("[RUN] Tone 2", 'blue')
 		
 				if timeKeeper.timeCheck(globals.timePoint, 3.00, time.time()) == True and playState == 2:
 					playState = 3
 					HighTone.play()
 					print("[RUN] Tone 3")
+					self.addToLogWindow.emit("[RUN] Tone 3", 'blue')
 					played = True
 
 				if played == True and mixer.get_busy() != 1:
@@ -265,4 +269,5 @@ class Run(QThread):
 				self.keepalivethread.emit()
 
 		print("[RUN] Thread Terminated")
+		self.addToLogWindow.emit("[RUN] Thread Terminated", 'red')
 

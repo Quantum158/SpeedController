@@ -1,1 +1,0 @@
-python -m PyQt5.uic.pyuic -x C:\Users\Benja\Source\Repos\Quantum158\SpeedController\V2\GUI.ui -o C:\Users\Benja\Source\Repos\Quantum158\SpeedController\V2\GUI.py

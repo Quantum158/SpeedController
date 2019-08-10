@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\Benja\Source\Repos\Quantum158\SpeedController\V2\GUI.ui'
+# Form implementation generated from reading ui file 'C:\Users\Benja\Source\Repos\Quantum158\SpeedController\modules\GUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -98,7 +98,7 @@ class Ui_MainWindow(object):
         self.OptionsLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.OptionsLabel.setObjectName("OptionsLabel")
         self.formLayoutWidget_2 = QtWidgets.QWidget(self.CentralUnit)
-        self.formLayoutWidget_2.setGeometry(QtCore.QRect(0, 370, 261, 211))
+        self.formLayoutWidget_2.setGeometry(QtCore.QRect(0, 370, 261, 224))
         self.formLayoutWidget_2.setObjectName("formLayoutWidget_2")
         self.OptionsLayout = QtWidgets.QFormLayout(self.formLayoutWidget_2)
         self.OptionsLayout.setContentsMargins(0, 0, 0, 0)
@@ -179,6 +179,9 @@ class Ui_MainWindow(object):
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.PacerLayout.addItem(spacerItem2)
         self.OptionsLayout.setLayout(8, QtWidgets.QFormLayout.FieldRole, self.PacerLayout)
+        self.OpenLogPush = QtWidgets.QPushButton(self.formLayoutWidget_2)
+        self.OpenLogPush.setObjectName("OpenLogPush")
+        self.OptionsLayout.setWidget(9, QtWidgets.QFormLayout.SpanningRole, self.OpenLogPush)
         self.ControlOutlineBottom = QtWidgets.QFrame(self.CentralUnit)
         self.ControlOutlineBottom.setGeometry(QtCore.QRect(30, 240, 201, 21))
         self.ControlOutlineBottom.setStyleSheet("color: rgb(16, 220, 2);")
@@ -280,6 +283,7 @@ class Ui_MainWindow(object):
         self.PacerLabel.setText(_translate("MainWindow", "Pacer Beeps"))
         self.PacerBeepsSpin.setToolTip(_translate("MainWindow", "<html><head/><body><p>&lt;SOMEONE NEEDS TO HELP ME DESCRIBE THIS&gt;</p></body></html>"))
         self.PacerBeepsSpin.setSuffix(_translate("MainWindow", "   Seconds"))
+        self.OpenLogPush.setText(_translate("MainWindow", "Open Log"))
         self.TimerBLabel.setText(_translate("MainWindow", "Timer B"))
         self.TimerBTime.setText(_translate("MainWindow", "0:00.00"))
         self.BStopTime.setText(_translate("MainWindow", "Stop Time\n"
