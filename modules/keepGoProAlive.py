@@ -1,6 +1,7 @@
-import globals
-from timeKeeper import *
-from goPro import *
+import modules.globals
+globals = modules.globals
+from modules.timeKeeper import *
+from modules.goPro import *
 import time
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSignal

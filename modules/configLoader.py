@@ -1,4 +1,5 @@
-import config
+import modules.config
+config = modules.config
 def init():
 	#Timers
 	global TimeAEnabled 

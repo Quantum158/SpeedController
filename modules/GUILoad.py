@@ -1,10 +1,15 @@
 from time import sleep
-import globals
-import run
-import keepGoProAlive
-from goPro import goPro
-import configLoader
-from GUI import Ui_MainWindow
+import modules.globals
+globals = modules.globals
+
+import modules.run
+run = modules.run
+import modules.keepGoProAlive
+keepGoProAlive = modules.keepGoProAlive
+from modules.goPro import goPro
+import modules.configLoader
+configLoader = modules.configLoader
+from modules.GUI import Ui_MainWindow
 
 import sys, os
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))

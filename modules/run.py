@@ -1,7 +1,9 @@
-import globals
-import configLoader
-from timeKeeper import *
-from goPro import *
+import modules.globals
+globals = modules.globals
+import modules.configLoader
+configLoader = modules.configLoader
+from modules.timeKeeper import *
+from modules.goPro import *
 import time
 import sys, os
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))

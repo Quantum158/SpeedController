@@ -1,10 +1,10 @@
-import globals
-globals.init()
-import configLoader
-configLoader.init()
+import modules.globals
+modules.globals.init()
+import modules.configLoader
+modules.configLoader.init()
 
 from time import sleep
-import GUILoad
+import modules.GUILoad
 sleep(1)
 
 import sys, os
@@ -19,6 +19,6 @@ from PyQt5.QtCore import pyqtSignal
 
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
-	ui = GUILoad.ApplicationWindow()
+	ui = modules.GUILoad.ApplicationWindow()
 	ui.show()
 	sys.exit(app.exec_())

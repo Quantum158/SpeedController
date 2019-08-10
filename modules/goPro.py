@@ -1,6 +1,7 @@
 import urllib.request
 from wakeonlan import send_magic_packet
-import globals
+import modules.globals
+globals = modules.globals
 from time import sleep
 import socket
 import sys
