@@ -1,7 +1,12 @@
 # SpeedController
 ## Version 2.6.0
-A python application to replace the functionality of the Speed Controller Box at the Calgary Climbing Centre (Which is broken currently)
+A python application to replace the functionality of the Speed Controller Box at the Calgary Climbing Centre
+----
 
-This project is still in development, as such, there is no executable included in the repository, feel free to follow my progress though!
+master branch for development
+see App branches for release code
 
-Once I am satisfied with the state of the project, I will do an official release. Hopefully that will be sooner than later
+
+This project is still in development, and is changed regularly. Because of this, new app releases will only be released periodically and not after every change.
+
+
