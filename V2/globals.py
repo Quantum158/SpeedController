@@ -42,4 +42,4 @@ def init():
 	timeAactive = False
 	global timeBactive
 	timeBactive = False
-	print("Globals Initialized!")
+	print("[SYS] Globals Initialized!")

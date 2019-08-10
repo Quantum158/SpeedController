@@ -37,8 +37,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		#Temp because I can't be bothered to do keyboard stuff
 		#self.ui.AStopTime.setEnabled(False)
 		#self.ui.AStopTime.setText(_translate("MainWindow", "Disabled"))
+		self.ui.AStopTime.setText(_translate("MainWindow", "Stop Time"))
 		#self.ui.BStopTime.setEnabled(False)
 		#self.ui.BStopTime.setText(_translate("MainWindow", "Disabled"))
+		self.ui.BStopTime.setText(_translate("MainWindow", "Stop Time"))
 		self.ui.AFalseStart.setEnabled(False)
 		self.ui.AFalseStart.setText(_translate("MainWindow", "Disabled"))
 		self.ui.BFalseStart.setEnabled(False)
@@ -178,21 +180,29 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			print("[Option] Warnings UnChecked")
 			globals.goProWarnings = False
 
-	def autoRecordStopSetting(self, text):
-		print("[Option] Auto Record Stop Value Changed: {}".format(str(text)))
-		configLoader.autoRecordStop = text
+	def autoRecordStopSetting(self, value):
+		if value == 1:
+			self.ui.RecordSpin.setSuffix("    Second")
+		else:
+			self.ui.RecordSpin.setSuffix("   Seconds")
+		print("[Option] Auto Record Stop Value Changed: {}".format(str(value)))
+		configLoader.autoRecordStop = value
 
-	def StageDelaySetting(self, text): #Pre
-		print("[Option] Stage Delay Value Changed: {}".format(str(text)))
-		configLoader.delayStage = text
+	def StageDelaySetting(self, value): #Pre
+		if value == 1:
+			self.ui.StageDelaySpin.setSuffix("    Second")
+		else:
+			self.ui.StageDelaySpin.setSuffix("   Seconds")
+		print("[Option] Stage Delay Value Changed: {}".format(str(value)))
+		configLoader.delayStage = value
 
-	def CheckDelaySetting(self, text): #Wait
-		print("[Option] Check Delay Value Changed: {}".format(str(text)))
-		configLoader.startCheck = text
-
-	def PacerBeepsSetting(self, text): #Pacer Beeps
-		print("[Option] Pacer Beeps Value Changed: {}".format(str(text)))
-		configLoader.PacerBeeps = text
+	def PacerBeepsSetting(self, value): #Pacer Beeps
+		if value == 1:
+			self.ui.PacerBeepsSpin.setSuffix("    Second")
+		else:
+			self.ui.PacerBeepsSpin.setSuffix("   Seconds")
+		print("[Option] Pacer Beeps Value Changed: {}".format(str(value)))
+		configLoader.PacerBeeps = value
 
 	def AStopTime(self):
 		if globals.LControlEnabled == True:
@@ -240,6 +250,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			return
 
 		if globals.StartEnabled == False:	
+			print("[MAIN] Run Thread Termination Cued")
 			globals.runthreadrunning = False
 			globals.abort = True
 			if globals.recording == False:
@@ -250,7 +261,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 				self.changeStatusText("Aborting...")
 				self.changeButtonText("Working")
 				self.setPushControllerState(False)
-				print("Attempting to Stop")
 				
 				timer = QTimer(self)
 				timer.timeout.connect(callback)
@@ -261,6 +271,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			if globals.recording == True:
 				def callback():
 					self.changeStatusText("Restarting\nCamera...")
+					sleep(0.2)
 					if goPro.cameraCheck() == True:
 						goPro.forceToVideoMode()
 						self.endThreadReset()
@@ -276,6 +287,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 				self.setPushControllerState(False)
 
 				goPro.stopShutter()
+				globals.recording = False #Incase GoPro accidentally entered phantom record state
 				timer = QTimer(self)
 				timer.timeout.connect(callback)
 				timer.setSingleShot(True)
@@ -338,7 +350,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 	def goProRecover(self):
 		pass_dialog = QtWidgets.QMessageBox()
-		pass_dialog.setText("GoPro connection re-established!")
+		if globals.goProFirstConnect == 1:
+			pass_dialog.setText("GoPro connection established!")
+		else:
+			pass_dialog.setText("GoPro connection re-established!")
 		pass_dialog.setWindowTitle("Success")
 		pass_dialog.exec_()
 

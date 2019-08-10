@@ -94,8 +94,9 @@ class goPro:
             if globals.recording == True:
                 print("[WARN] Trigger Shutter command recieved but camera is already recording! Ignored")
             else:
-                urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=1')
                 globals.recording = True
+                urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=1')
+                
         except Exception:
             print("Trigger Shutter Error")
             globals.error = True
@@ -105,8 +106,9 @@ class goPro:
             if globals.recording == False:
                 print("[WARN] Stop Shutter command recieved but camera is not recording! Ignored")
             else:
-                urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=0')
                 globals.recording = False
+                urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/shutter?p=0')
+                
         except Exception:
             print("Stop Shutter Error")
             globals.error = True
@@ -119,3 +121,9 @@ class goPro:
             print("Keep Alive Error")
             globals.error = True
 
+    def forceShutdown():
+        try:
+            urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/system/sleep')
+        except:
+            print("Force Shutdown Error")
+            globals.error = True

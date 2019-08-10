@@ -25,6 +25,11 @@ def isNotBoolean(value):
 
 def finishedFunctions(runClass, pacerCurrent, stopThreadholdPassed):
 	passedChecks = 0
+	requiredPass = -1
+	if globals.goPro == 1:
+		requiredPass = 3
+	else:
+		requiredPass = 2
 	if globals.timeAactive == False and globals.timeBactive == False:
 		runClass.textStatus.emit("Both Timers\nStopped!")
 		passedChecks = passedChecks + 1
@@ -35,7 +40,8 @@ def finishedFunctions(runClass, pacerCurrent, stopThreadholdPassed):
 	if stopThreadholdPassed == True:
 		passedChecks = passedChecks + 1
 
-	if passedChecks == 3:
+	
+	if passedChecks == requiredPass:
 		return True
 	else:
 		return False
@@ -58,6 +64,17 @@ def goProCheckConnection(runClass):
 		globals.runthreadrunning = False
 		globals.controlState = -1
 		globals.error = True
+
+def goProStartRecording(runClass):	
+	if globals.recording == False:
+		runClass.textStatus.emit("Starting Recording")
+		sleep(0.25)
+		goPro.triggerShutter()
+		globals.recording = True
+		runClass.buttonText.emit("Stop Record")		
+		sleep(0.25)
+	else:
+		print("[RUN] [WARN] Attempted to start recording but camera reports it already is!")	
 
 def timerDisplayReset(runClass):
 	if configLoader.TimeAEnabled == True:
@@ -127,21 +144,13 @@ class Run(QThread):
 				
 
 				
-		if globals.recording == False and globals.goPro == True: #Start Recording on Camera
-			self.textStatus.emit("Starting Recording")
-			sleep(0.25)
-			goPro.triggerShutter()
-			globals.recording = True
-			self.buttonText.emit("Stop Record")		
-			sleep(0.25)
-				
-		else:
-			print("[RUN] [WARN] Attempted to start recording but camera reports it already is!")	
+		if globals.goPro == True and globals.error == False and globals.abort == False: #Start Recording on Camera
+			goProStartRecording(self)
 
 		#Setup for tone countdown
 		playState = 0
 		played = False
-		while globals.runthreadrunning == True and globals.controlState > -1:
+		while globals.runthreadrunning == True and globals.controlState > -1 and globals.abort == False and globals.error == False:
 			if globals.controlState == 0: #Countdown
 				if globals.timePoint == 0:
 					self.textStatus.emit("Countdown\nRunning")
@@ -214,16 +223,15 @@ class Run(QThread):
 					globals.controlState = 2			
 				
 			if globals.controlState == 2: #Functions stopped (pacers, timers)				
-				globals.runthreadrunning = False
+				globals.runthreadrunning = False #MachineSuicide
 			
 			if configLoader.autoRecordStop > 0 and stopThreadholdPassed == False and globals.controlState < 2: # autoRecordStop > 0 means the user wants the camera to stop automatically
-				print(timeKeeper.timeCheck(globals.timePoint, int(configLoader.autoRecordStop), time.time()))
 				if timeKeeper.timeCheck(globals.timePoint, int(configLoader.autoRecordStop), time.time()) == True:
 					if globals.recording == True:
 						stopThreadholdPassed = True
 
 
-			sleep(0.016)
+			sleep(0.016) #60 clock cycles per second
 
 		#End of Loop
 		

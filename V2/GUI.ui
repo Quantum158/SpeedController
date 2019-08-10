@@ -372,13 +372,13 @@ text-decoration: underline;</string>
            <item>
             <widget class="QSpinBox" name="RecordSpin">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera will automatically stop recording after said time&lt;/p&gt;&lt;p&gt;`0` means this is disabled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera will automatically stop recording this many seconds after climbing has started&lt;/p&gt;&lt;p&gt;(Note: This setting is based on when the climb begins. The camera starts recording ~4 seconds before climbing, this is not included)&lt;/p&gt;&lt;p&gt;Setting this value to `0` will disable the system from automatically stopping the camera&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="keyboardTracking">
               <bool>true</bool>
              </property>
              <property name="suffix">
-              <string>   Second(s)</string>
+              <string>   Seconds</string>
              </property>
              <property name="displayIntegerBase">
               <number>10</number>
@@ -437,7 +437,7 @@ text-decoration: underline;</string>
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;System will wait said time after start is pressed before playing the start tones&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="suffix">
-              <string>   Second(s)</string>
+              <string>   Seconds</string>
              </property>
              <property name="prefix">
               <string/>
@@ -499,7 +499,7 @@ text-decoration: underline;</string>
               <bool>true</bool>
              </property>
              <property name="suffix">
-              <string>   Second(s)</string>
+              <string>   Seconds</string>
              </property>
             </widget>
            </item>
