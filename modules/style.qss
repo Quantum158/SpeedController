@@ -1,0 +1,7 @@
+QPushButton#pushController {
+    border: 3px solid green;
+    font: 25pt "MS Shell Dlg 2";
+}
+QPushButton:hover:enabled {
+    background-color: #E4EFF9;
+}
