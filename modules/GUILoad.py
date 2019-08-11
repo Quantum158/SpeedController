@@ -22,45 +22,52 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 
 
 _translate = QtCore.QCoreApplication.translate
+def initMainUI(appWindow):
+	appWindow.ui = modules.GUI.Ui_MainWindow()
+	appWindow.ui.setupUi(appWindow)
+
+	appWindow.ui.pushController.clicked.connect(appWindow.onStart)
+	appWindow.ui.checkATimerEnable.stateChanged.connect(appWindow.TimerASetting)
+	appWindow.ui.checkBTimerEnable.stateChanged.connect(appWindow.TimerBSetting)
+	appWindow.ui.checkGoProCommands.stateChanged.connect(appWindow.goProSetting)
+	appWindow.ui.GoProWarningBeeps.stateChanged.connect(appWindow.goProWarningSetting)
+	appWindow.ui.RecordSpin.valueChanged.connect(appWindow.autoRecordStopSetting)
+	appWindow.ui.StageDelaySpin.valueChanged.connect(appWindow.StageDelaySetting)
+	appWindow.ui.PacerBeepsSpin.valueChanged.connect(appWindow.PacerBeepsSetting)
+	appWindow.ui.AStopTime.clicked.connect(appWindow.AStopTime)
+	appWindow.ui.BStopTime.clicked.connect(appWindow.BStopTime)
+	appWindow.ui.OpenLogPush.clicked.connect(appWindow.openLogWindow)
+
+	appWindow.ui.GoProWarningBeeps.setEnabled(False)
+	appWindow.ui.RecordSpin.setEnabled(False)
+
+	#Temp because I can't be bothered to do keyboard stuff
+	#appWindow.ui.AStopTime.setEnabled(False)
+	#appWindow.ui.AStopTime.setText(_translate("MainWindow", "Disabled"))
+	appWindow.ui.AStopTime.setText(_translate("MainWindow", "Stop Time"))
+	#appWindow.ui.BStopTime.setEnabled(False)
+	#appWindow.ui.BStopTime.setText(_translate("MainWindow", "Disabled"))
+	appWindow.ui.BStopTime.setText(_translate("MainWindow", "Stop Time"))
+	appWindow.ui.AFalseStart.setEnabled(False)
+	appWindow.ui.AFalseStart.setText(_translate("MainWindow", "Disabled"))
+	appWindow.ui.BFalseStart.setEnabled(False)
+	appWindow.ui.BFalseStart.setText(_translate("MainWindow", "Disabled"))
+
+	#appWindow.ui.AFalseStart.clicked.connect(appWindow.AFalseStart)
+	#appWindow.ui.BFalseStart.clicked.connect(appWindow.BFalseStart)
+
+	qssFile = "modules\style.qss"
+	with open(qssFile, "r") as ss:
+		appWindow.setStyleSheet(ss.read())
+
+	appWindow.setWindowTitle(_translate("MainWindow", "Speed Controller"))
+	appWindow.setWindowIcon(QtGui.QIcon(os.path.join(__location__, "Resources", "Icon2.jpg")))
+
 class ApplicationWindow(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(ApplicationWindow, self).__init__()
-
-		self.ui = modules.GUI.Ui_MainWindow()
-		self.ui.setupUi(self)
-
-		self.ui.pushController.clicked.connect(self.onStart)
-		self.ui.checkATimerEnable.stateChanged.connect(self.TimerASetting)
-		self.ui.checkBTimerEnable.stateChanged.connect(self.TimerBSetting)
-		self.ui.checkGoProCommands.stateChanged.connect(self.goProSetting)
-		self.ui.GoProWarningBeeps.stateChanged.connect(self.goProWarningSetting)
-		self.ui.RecordSpin.valueChanged.connect(self.autoRecordStopSetting)
-		self.ui.StageDelaySpin.valueChanged.connect(self.StageDelaySetting)
-		self.ui.PacerBeepsSpin.valueChanged.connect(self.PacerBeepsSetting)
-		self.ui.AStopTime.clicked.connect(self.AStopTime)
-		self.ui.BStopTime.clicked.connect(self.BStopTime)
-		self.ui.OpenLogPush.clicked.connect(self.openLogWindow)
-
-		self.ui.GoProWarningBeeps.setEnabled(False)
-		self.ui.RecordSpin.setEnabled(False)
-
-		#Temp because I can't be bothered to do keyboard stuff
-		#self.ui.AStopTime.setEnabled(False)
-		#self.ui.AStopTime.setText(_translate("MainWindow", "Disabled"))
-		self.ui.AStopTime.setText(_translate("MainWindow", "Stop Time"))
-		#self.ui.BStopTime.setEnabled(False)
-		#self.ui.BStopTime.setText(_translate("MainWindow", "Disabled"))
-		self.ui.BStopTime.setText(_translate("MainWindow", "Stop Time"))
-		self.ui.AFalseStart.setEnabled(False)
-		self.ui.AFalseStart.setText(_translate("MainWindow", "Disabled"))
-		self.ui.BFalseStart.setEnabled(False)
-		self.ui.BFalseStart.setText(_translate("MainWindow", "Disabled"))
-
-		#self.ui.AFalseStart.clicked.connect(self.AFalseStart)
-		#self.ui.BFalseStart.clicked.connect(self.BFalseStart)
-
-		self.setWindowTitle(_translate("MainWindow", "Speed Controller"))
-		self.setWindowIcon(QtGui.QIcon(os.path.join(__location__, "Resources", "Icon2.jpg")))
+		initMainUI(self)
+		
 		globals.StartEnabled = True
 
 	def changeButtonText(self, text):
@@ -72,16 +79,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 	def setPushControllerState(self, state):
 		if state == True:
 			self.ui.pushController.setEnabled(True)
-			self.ui.ControlOutlineTop.setStyleSheet("color: rgb(16, 220, 2);")
-			self.ui.ControlOutlineLeft.setStyleSheet("color: rgb(16, 220, 2);")
-			self.ui.ControlOutlineRight.setStyleSheet("color: rgb(16, 220, 2);")
-			self.ui.ControlOutlineBottom.setStyleSheet("color: rgb(16, 220, 2);")
+			self.ui.pushController.setStyleSheet("font: 25pt \"MS Shell Dlg 2\";\nborder: 3px solid green;")
+
 		if state == False:
 			self.ui.pushController.setEnabled(False)
-			self.ui.ControlOutlineTop.setStyleSheet("color: rgb(220, 16, 2);")
-			self.ui.ControlOutlineLeft.setStyleSheet("color: rgb(220, 16, 2);")
-			self.ui.ControlOutlineRight.setStyleSheet("color: rgb(220, 16, 2);")
-			self.ui.ControlOutlineBottom.setStyleSheet("color: rgb(220, 16, 2);")
+			self.ui.pushController.setStyleSheet("font: 25pt \"MS Shell Dlg 2\";\nborder: 3px solid red;")
 
 	def setGoProOptionsState(self, state):
 		"""State: 0-All Disabled, 1-Just Main Disabled, 2-All But Main Enabled, 3-All Enabled"""
@@ -246,10 +248,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		if globals.StartEnabled == True:
 			def callback():
 				return self.worker.start()
-			
-			print("[MAIN] Keep Alive Thread Termination Cued")
-			self.addToLogWindow("[MAIN] Keep Alive Thread Termination Cued", 'orange')
-			globals.keepaliverunning = False #Disable keep alive thread for gopro
+			if globals.keepaliverunning == True:
+				print("[MAIN] Keep Alive Thread Termination Cued")
+				self.addToLogWindow("[MAIN] Keep Alive Thread Termination Cued", 'orange')
+				globals.keepaliverunning = False #Disable keep alive thread for gopro
 			globals.StartEnabled = False
 			globals.abort = False
 			globals.error = False
@@ -277,7 +279,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 			timer.start(500)
 			return
 
-		if globals.StartEnabled == False:	
+		if globals.StartEnabled == False:
 			print("[MAIN] Run Thread Termination Cued")
 			self.addToLogWindow("[MAIN] Run Thread Termination Cued", 'orange')
 			globals.runthreadrunning = False
@@ -353,13 +355,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 		self.ui.TimerATime.setText(_translate("MainWindow", text))
 
 	def aColourUpdate(self, colour):
-		self.ui.AHalf.setStyleSheet("background-color: rgb" + colour +";")
+		self.ui.AColourDisplay.setStyleSheet("background-color: rgb" + colour +";")
 
 	def bTimeUpdate(self, text):
 		self.ui.TimerBTime.setText(_translate("MainWindow", text))
 
 	def bColourUpdate(self, colour):
-		self.ui.BHalf.setStyleSheet("background-color: rgb" + colour +";")
+		self.ui.BColourDisplay.setStyleSheet("background-color: rgb" + colour +";")
 
 	def keyPressEvent(self, e):
 		if e.key() == QtCore.Qt.Key_Escape:

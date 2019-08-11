@@ -31,6 +31,10 @@ class timeKeeper:
 		return round(totalDelay - timePassed, 1)
 
 	def timeConverter(seconds):
+		#f = miliseconds
+		#s = seconds
+		#m = minutes
+
 		s, f = divmod(seconds, 1)
 		m, s = divmod(s, 60)
 		m = int(m)
@@ -42,4 +46,6 @@ class timeKeeper:
 		f = int(round(f, 2)*100)
 		if len(str(f)) < 2:
 			f = str(0) + str(f)
+		if len(str(f)) > 2:
+			f = str(f)[:-1]
 		return(str(m) + ":" + str(s) + "." + str(f))

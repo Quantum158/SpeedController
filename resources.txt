@@ -1,7 +1,13 @@
-https://www.zeolearn.com/magazine/getting-started-guis-with-python-pyqt-qthread-class
+https://doc.qt.io/qt-5/stylesheet-reference.html#list-of-properties
 
-https://docs.python.org/3/library/configparser.html
+https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qpushbutton
 
-https://stackoverflow.com/questions/30462078/using-a-checkbox-in-pyqt
+https://doc.qt.io/qt-5/stylesheet-customizing.html#box-model
 
-https://stackoverflow.com/questions/23314263/pyqt-check-if-value-of-lineedit-changed
+https://doc.qt.io/qt-5/stylesheet-reference.html
+
+https://doc.qt.io/qt-5/stylesheet-syntax.html
+
+https://build-system.fman.io/pyqt5-tutorial
+
+https://thecodeinn.blogspot.com/2013/08/tutorial-how-to-make-flatsquare-and.html
