@@ -8,6 +8,6 @@ master branch for development
 see App branches for release code
 
 
-This project is still in development, and is changed regularly. Because of this, new app releases will only be released periodically and not after every change.
+This project is still in development, and is changed regularly. Because of this, new app releases will only be released after significant changes.
 
 
