@@ -13,5 +13,4 @@
 .vs/*
 
 cmd_commands.txt
-resources.tx
-SpeedControllerExeBuild
+resources.txt
