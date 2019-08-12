@@ -1,0 +1,4 @@
+-r base.txt
+PyQt5==5.9.2
+pygame==1.9.4
+wakeonlan==1.1.6
