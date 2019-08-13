@@ -11,3 +11,6 @@
 # End of https://www.gitignore.io/api/visualstudiocode
 
 .vs/*
+
+cmd_commands.txt
+resources.txt
