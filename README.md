@@ -1,6 +1,6 @@
 # SpeedController
 ## Version 2.7.0
-![alt text](https://github.com/Quantum158/SpeedController/blob/master/modules/Resources/Icon2.ico "Speed Controller")
+![alt text](https://github.com/Quantum158/SpeedController/blob/master/src/main/icons/base/64.png "Speed Controller")
 
 A python application to replace the functionality of the Speed Controller Box at the Calgary Climbing Centre
 
